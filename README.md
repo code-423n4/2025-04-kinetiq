@@ -23,14 +23,14 @@ Some of the checklists in this doc are for our scouts and some of them are for *
 
 ---
 
-# Sponsorname audit details
-- Total Prize Pool: XXX XXX USDC (Notion: Total award pool)
+# Kinetiq audit details
+- Total Prize Pool: $35000 in USDC
   - HM awards: up to XXX XXX USDC (Notion: HM (main) pool)
     - If no valid Highs or Mediums are found, the HM pool is $0 
-  - QA awards: XXX XXX USDC (Notion: QA pool)
-  - Judge awards: XXX XXX USDC (Notion: Judge Fee)
+  - QA awards: $1200 in USDC
+  - Judge awards: $2900 in USDC
   - Validator awards: XXX XXX USDC (Notion: Triage fee - final)
-  - Scout awards: $500 USDC (Notion: Scout fee - but usually $500 USDC)
+  - Scout awards: $500 in USDC
   - (this line can be removed if there is no mitigation) Mitigation Review: XXX XXX USDC
 - [Read our guidelines for more details](https://docs.code4rena.com/roles/wardens)
 - Starts XXX XXX XX 20:00 UTC (ex. `Starts March 22, 2023 20:00 UTC`)
@@ -46,9 +46,9 @@ As such, wardens are encouraged to select the appropriate risk level carefully d
 
 ## Automated Findings / Publicly Known Issues
 
-The 4naly3er report can be found [here](https://github.com/code-423n4/YYYY-MM-contest-candidate/blob/main/4naly3er-report.md).
+The 4naly3er report can be found [here](https://github.com/code-423n4/2025-04-kinetiq/blob/main/4naly3er-report.md).
 
-Automated findings output for the audit can be found [here](https://github.com/code-423n4/YYYY-MM-contest-candidate/blob/main/bot-report.md) within 24 hours of audit opening.
+
 
 _Note for C4 wardens: Anything included in this `Automated Findings / Publicly Known Issues` section is considered a publicly known issue and is ineligible for awards._
 ## 🐺 C4: Begin Gist paste here (and delete this line)
