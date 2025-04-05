@@ -183,14 +183,42 @@ we also have some off chain components that help maintain protocol
 
 ## All trusted roles in the protocol
 
-Documentation to be provided
+Roles hierarchy:
+```
+DEFAULT_ADMIN_ROLE
+├── StakingManager
+│   ├── OPERATOR_ROLE
+│   ├── MANAGER_ROLE
+│   ├── TREASURY_ROLE
+│   └── SENTINEL_ROLE
+├── ValidatorManager
+│   ├── MANAGER_ROLE
+│   └── ORACLE_MANAGER_ROLE(contract)
+├── OracleManager
+│   ├── MANAGER_ROLE
+│   └── OPERATOR_ROLE
+├── StakingAccountant
+│   └── MANAGER_ROLE
+├── KHYPE Token
+│   ├── MINTER_ROLE(contract)
+│   └── BURNER_ROLE(contract)
+└── PauserRegistry
+    ├── PAUSER_ROLE
+    ├── UNPAUSER_ROLE
+    └── PAUSE_ALL_ROLE
+```
 
-✅ SCOUTS: Please format the response above 👆 using the template below👇
-
-| Role                                | Description                       |
-| --------------------------------------- | ---------------------------- |
-| Owner                          | Has superpowers                |
-| Administrator                             | Can change fees                       |
+1) Admin Trust: The DEFAULT_ADMIN_ROLE has full control over the protocol and must be a highly trusted entity, ideally a multi-sig or governance contract.
+2) Operational Trust:
+    * OPERATOR_ROLE: Must reliably execute L1 operations and manage the operation queue
+    * MANAGER_ROLE: Has significant control over protocol parameters across multiple contracts
+    * ORACLE_MANAGER_ROLE: Controls the flow of external data into the protocol
+3) Emergency Controls:
+    * SENTINEL_ROLE: Likely has emergency powers to protect the protocol
+    * PAUSER_ROLE/PAUSE_ALL_ROLE: Can halt protocol operations in emergencies
+4) Financial Trust:
+    * TREASURY_ROLE: Receives protocol revenues
+    * MINTER_ROLE/BURNER_ROLE: Controls token supply 
 
 ## Describe any novel or unique curve logic or mathematical models implemented in the contracts:
 
