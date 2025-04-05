@@ -1,0 +1,52 @@
+{
+  "roles": {
+    "admin": "0x798b026878603494176eDb7aEa2c23935A6b166f",
+    "manager": "0x798b026878603494176eDb7aEa2c23935A6b166f",
+    "sentinel": "0x798b026878603494176eDb7aEa2c23935A6b166f",
+    "operator": "0x798b026878603494176eDb7aEa2c23935A6b166f",
+    "pauser": "0x798b026878603494176eDb7aEa2c23935A6b166f",
+    "unpauser": "0x798b026878603494176eDb7aEa2c23935A6b166f",
+    "pauseAll": "0x798b026878603494176eDb7aEa2c23935A6b166f",
+    "validatorManager": "0x798b026878603494176eDb7aEa2c23935A6b166f",
+    "validatorSentinel": "0x798b026878603494176eDb7aEa2c23935A6b166f",
+    "oracleManager": "0x798b026878603494176eDb7aEa2c23935A6b166f",
+    "oracleOperator": "0x798b026878603494176eDb7aEa2c23935A6b166f",
+    "treasury": "0x798b026878603494176eDb7aEa2c23935A6b166f"
+  },
+  "staking": {
+    "minStakeAmount": "100000000000000000",
+    "maxStakeAmount": "0",
+    "stakingLimit": "0",
+    "targetBuffer": "0",
+    "withdrawalDelay": "0",
+    "unstakeFeeRate": "10",
+    "hypeTokenId": "1105"
+  },
+  "validator": {
+    "emergencyWithdrawalLimit": "1000000000000000000000"
+  },
+  "oracle": {
+    "maxPerformanceBound": "10000",
+    "minUpdateInterval": "3600"
+  },
+  "token": {
+    "name": "Kinetiq Staked HYPE",
+    "symbol": "kHYPE"
+  },
+  "addresses": {
+    "l1Write": "0x3333333333333333333333333333333333333333"
+  },
+  "deployment": {
+    "saltShift": "0"
+  },
+  "deployed": {
+    "PauserRegistry": "0x53132dD0bFD1165A632f4f920086A20bC705DC2B",
+    "StakingManager": "0x6b2839d744485E3d78fD22b66f213AaB79c0DEe5",
+    "KHYPE": "0xD3ca922e3F9629Ca70D81a7f180Aa7c00470C395",
+    "ValidatorManager": "0x5f607B88CFB9fAa7cb05594EbEF696d323c74Fa8",
+    "StakingAccountant": "0xF4F4872FCd419881C0446f4FA4cC0a6562020D6E",
+    "OracleManager": "0xBC644cB74dA6C271bC39e6987d8DeD013878DFC0",
+    "DefaultOracle": "0x8EFE857cB4dD81709C0e404B8bB1FfF3Ba40202D",
+    "OracleAdapter": "0x0b43b6A4A9f5476Bc66AdcAf5bD2B337fd0b0C47"
+  }
+}

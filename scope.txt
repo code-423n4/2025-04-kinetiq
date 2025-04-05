@@ -1,0 +1,9 @@
+./src/KHYPE.sol
+./src/OracleManager.sol
+./src/PauserRegistry.sol
+./src/StakingAccountant.sol
+./src/StakingManager.sol
+./src/ValidatorManager.sol
+./src/oracles/DefaultAdapter.sol
+./src/oracles/DefaultOracle.sol
+./src/oracles/IOracleAdapter.sol

@@ -1,0 +1,326 @@
+version: "3"
+env:
+  ROOT_DIR: "{{ .ROOT_DIR }}"
+
+tasks:
+  _deployCore:
+    internal: true
+    silent: true
+    vars:
+      CONFIG_JSON: '{{.CONFIG_JSON | default ""}}'
+      CLI_ARGS: '{{.CLI_ARGS | default ""}}'
+    cmds:
+      - |
+        if [ -z "{{.CONFIG_JSON}}" ]; then
+          echo "CONFIG_JSON parameter is required"
+          exit 1
+        fi
+        forge script script/DeployCore.s.sol:DeployCore --sig "run(string)" {{.CONFIG_JSON}} --fork-url ${FOUNDRY_RPC_URL} {{.CLI_ARGS}}
+
+  _deployOracleAdapter:
+    internal: true
+    cmds:
+      - forge script script/DeployOracleAdapter.s.sol:DeployOracleAdapterScript -vvvv --fork-url ${FOUNDRY_RPC_URL} -s "run(address)" {{.EXTRA_ARGS}}
+
+  _deployMockOracle:
+    internal: true
+    cmds:
+      - forge script script/DeployMockOracle.s.sol:DeployMockOracleScript -vvvv --fork-url ${FOUNDRY_RPC_URL} -s "run()" {{.EXTRA_ARGS}}
+
+  _deployOracle:
+    internal: true
+    cmds:
+      - forge script script/DeployOracle.s.sol:DeployOracleScript -vvvv --fork-url ${FOUNDRY_RPC_URL} -s "run(string)" {{.CONFIG_JSON}} {{.EXTRA_ARGS}}
+
+  deploy-mock-oracle:
+    cmds:
+      - task: _deployMockOracle
+        vars:
+          EXTRA_ARGS: "{{.CLI_ARGS}}"
+
+  deploy-oracle:
+    desc: Deploy DefaultOracle and OracleAdapter
+    cmds:
+      - task: _deployOracle
+        vars:
+          EXTRA_ARGS: "{{.CLI_ARGS}}"
+
+  deploy-oracle-adapter:
+    cmds:
+      - task: _deployOracleAdapter
+        vars:
+          EXTRA_ARGS: "{{.CLI_ARGS}}"
+
+
+  deploy-core:
+    desc: "Deploy core contracts"
+    cmds:
+      - task: _deployCore
+        vars:
+          CLI_ARGS: "{{.CLI_ARGS}}"
+
+  _deployAll:
+    internal: true
+    dotenv: ["config/{{.CHAIN_ID}}.env"]
+    cmds:
+      - task: _deployCore
+        vars:
+          CHAIN_ID: "{{.CHAIN_ID}}"
+          EXTRA_ARGS: "{{.EXTRA_ARGS}}"
+      - task: _deployOracleAdapter
+        vars:
+          CHAIN_ID: "{{.CHAIN_ID}}"
+          EXTRA_ARGS: "{{.EXTRA_ARGS}}"
+
+  deploy-all:
+    desc: "Deploys all contracts to Sepolia testnet"
+    cmds:
+      - task: _deployAll
+        vars:
+          EXTRA_ARGS: "{{.CLI_ARGS}}"
+
+  _script:
+    internal: true
+    silent: true
+    vars:
+      CONFIG_JSON: '{{.CONFIG_JSON | default ""}}'
+      CLI_ARGS: '{{.CLI_ARGS | default ""}}'
+    cmds: 
+      - |
+        if [ -z "{{.CONFIG_JSON}}" ]; then
+          echo "CONFIG_JSON parameter is required"
+          exit 1
+        fi
+        forge script {{.EXTRA_ARGS}} --fork-url ${FOUNDRY_RPC_URL} {{.CLI_ARGS}}
+
+  # User tasks
+  deposit:
+    desc: Stake HYPE tokens
+    cmds:
+      - task: _script
+        vars:
+          EXTRA_ARGS: script/tasks/UserDeposit.s.sol:UserDepositScript --sig "run(string,uint256)" {{.CONFIG_JSON}} {{.AMOUNT}}
+
+  queue-withdrawal:
+    desc: Queue withdrawal of KHYPE tokens
+    cmds:
+      - task: _script
+        vars:
+          EXTRA_ARGS: script/tasks/UserWithdraw.s.sol:UserWithdrawScript --sig "queueWithdrawal(string,uint256)" {{.CONFIG_JSON}} {{.AMOUNT}}
+
+  confirm-withdrawal:
+    desc: Confirm queued withdrawal
+    cmds:
+      - task: _script
+        vars:
+          EXTRA_ARGS: script/tasks/UserWithdraw.s.sol:UserWithdrawScript --sig "confirmWithdrawal(string,uint256)" {{.CONFIG_JSON}} {{.WITHDRAWAL_ID}}
+
+  # Operator tasks
+  generate-performance:
+    desc: Generate validator performance updates
+    cmds:
+      - task: _script
+        vars:
+          EXTRA_ARGS: script/tasks/OperatorPerformance.s.sol:OperatorPerformanceScript --sig "generatePerformance(string,address)" {{.CONFIG_JSON}} {{.VALIDATOR_ADDRESS}}
+
+  set-performance-bound:
+    desc: Set maximum performance bound
+    cmds:
+      - task: _script
+        vars:
+          EXTRA_ARGS: script/tasks/OperatorPerformance.s.sol:OperatorPerformanceScript --sig "setMaxPerformanceBound(string,uint256)" {{.CONFIG_JSON}} {{.BOUND}}
+
+  set-performance-tolerance:
+    desc: Set performance tolerance threshold
+    cmds:
+      - task: _script
+        vars:
+          EXTRA_ARGS: script/tasks/OperatorPerformance.s.sol:OperatorPerformanceScript --sig "setPerformanceTolerance(string,uint256)" {{.CONFIG_JSON}} {{.TOLERANCE}}
+
+  set-slashing-tolerance:
+    desc: Set slashing tolerance threshold
+    cmds:
+      - task: _script
+        vars:
+          EXTRA_ARGS: script/tasks/OperatorPerformance.s.sol:OperatorPerformanceScript --sig "setSlashingTolerance(string,uint256)" {{.CONFIG_JSON}} {{.TOLERANCE}}
+
+  set-update-interval:
+    desc: Set minimum update interval
+    cmds:
+      - task: _script
+        vars:
+          EXTRA_ARGS: script/tasks/OperatorPerformance.s.sol:OperatorPerformanceScript --sig "setMinUpdateInterval(string,uint256)" {{.CONFIG_JSON}} {{.INTERVAL}}
+
+  # Manager validator tasks
+  activate-validator:
+    desc: Activate a validator
+    cmds:
+      - task: _script
+        vars:
+          EXTRA_ARGS: script/tasks/ManagerValidator.s.sol:ManagerValidatorScript --sig "activateValidator(string,address)" {{.CONFIG_JSON}} {{.VALIDATOR}}
+
+  deactivate-validator:
+    desc: Deactivate a validator
+    cmds:
+      - task: _script
+        vars:
+          EXTRA_ARGS: script/tasks/ManagerValidator.s.sol:ManagerValidatorScript --sig "deactivateValidator(string,address)" {{.CONFIG_JSON}} {{.VALIDATOR}}
+
+  reactivate-validator:
+    desc: Reactivate a previously deactivated validator
+    cmds:
+      - task: _script
+        vars:
+          EXTRA_ARGS: script/tasks/ManagerValidator.s.sol:ManagerValidatorScript --sig "reactivateValidator(string,address)" {{.CONFIG_JSON}} {{.VALIDATOR}}
+
+  set-delegation:
+    desc: Set delegation target
+    cmds:
+      - task: _script
+        vars:
+          EXTRA_ARGS: script/tasks/ManagerValidator.s.sol:ManagerValidatorScript --sig "setDelegation(string,address)" {{.CONFIG_JSON}} {{.VALIDATOR}}
+
+  # Manager rebalance tasks
+  rebalance-withdrawal:
+    desc: Initiate rebalance withdrawal
+    cmds:
+      - task: _script
+        vars:
+          EXTRA_ARGS: script/tasks/ManagerRebalance.s.sol:ManagerRebalanceScript --sig "rebalanceWithdrawal(string,address[],uint256[])" {{.CONFIG_JSON}} {{.VALIDATORS}} {{.AMOUNTS}}
+
+  close-rebalance:
+    desc: Close rebalance requests
+    cmds:
+      - task: _script
+        vars:
+          EXTRA_ARGS: script/tasks/ManagerRebalance.s.sol:ManagerRebalanceScript --sig "closeRebalanceRequests(string,address[])" {{.CONFIG_JSON}} {{.VALIDATORS}}
+
+  # Manager whitelist tasks
+  enable-whitelist:
+    desc: Enable staking whitelist
+    cmds:
+      - task: _script
+        vars:
+          EXTRA_ARGS: script/tasks/ManagerWhitelist.s.sol:ManagerWhitelistScript --sig "enableWhitelist(string)" {{.CONFIG_JSON}}
+
+  disable-whitelist:
+    desc: Disable staking whitelist
+    cmds:
+      - task: _script
+        vars:
+          EXTRA_ARGS: script/tasks/ManagerWhitelist.s.sol:ManagerWhitelistScript --sig "disableWhitelist(string)" {{.CONFIG_JSON}}
+
+  add-to-whitelist:
+    desc: Add addresses to whitelist
+    cmds:
+      - task: _script
+        vars:
+          EXTRA_ARGS: script/tasks/ManagerWhitelist.s.sol:ManagerWhitelistScript --sig "addToWhitelist(string,address[])" {{.CONFIG_JSON}} {{.ACCOUNTS}}
+
+  remove-from-whitelist:
+    desc: Remove addresses from whitelist
+    cmds:
+      - task: _script
+        vars:
+          EXTRA_ARGS: script/tasks/ManagerWhitelist.s.sol:ManagerWhitelistScript --sig "removeFromWhitelist(string,address[])" {{.CONFIG_JSON}} {{.ACCOUNTS}}
+
+  # Manager oracle tasks
+  authorize-adapter:
+    desc: Authorize an oracle adapter
+    cmds:
+      - task: _script
+        vars:
+          EXTRA_ARGS: script/tasks/ManagerOracle.s.sol:ManagerOracleScript --sig "authorizeAdapter(string,address)" {{.CONFIG_JSON}} {{.ADAPTER}}
+
+  deauthorize-oracle:
+    desc: Deauthorize an oracle adapter
+    cmds:
+      - task: _script
+        vars:
+          EXTRA_ARGS: script/tasks/ManagerOracle.s.sol:ManagerOracleScript --sig "deauthorizeOracle(string,address)" {{.CONFIG_JSON}} {{.ADAPTER}}
+
+  set-oracle-active:
+    desc: Set oracle adapter active state
+    cmds:
+      - task: _script
+        vars:
+          EXTRA_ARGS: script/tasks/ManagerOracle.s.sol:ManagerOracleScript --sig "setOracleActive(string,address,bool)" {{.CONFIG_JSON}} {{.ADAPTER}} {{.ACTIVE}}
+
+  set-withdrawal-delay:
+    desc: Set withdrawal delay period
+    cmds:
+      - task: _script
+        vars:
+          EXTRA_ARGS: script/tasks/ManagerValidator.s.sol:ManagerValidatorScript --sig "setWithdrawalDelay(string,uint256)" {{.CONFIG_JSON}} {{.DELAY}}
+
+  update-metrics:
+    desc: Update validator metrics
+    cmds:
+      - task: _script
+        vars:
+          EXTRA_ARGS: script/tasks/OperatorOracle.s.sol:OperatorOracleScript --sig "updateMetrics(address,uint256,uint256,uint256,uint256,uint256,uint256,uint256)" {{.VALIDATOR}} {{.BALANCE}} {{.UPTIME}} {{.SPEED}} {{.INTEGRITY}} {{.STAKE}} {{.REWARD}} {{.SLASHING}}
+
+  # StakingAccountant tasks
+  authorize-staking-manager:
+    desc: Authorize a staking manager
+    cmds:
+      - task: _script
+        vars:
+          EXTRA_ARGS: script/tasks/ManagerStakingAccountant.s.sol:ManagerStakingAccountantScript --sig "authorizeStakingManager(string,address)" {{.CONFIG_JSON}} {{.MANAGER}}
+
+  deauthorize-staking-manager:
+    desc: Deauthorize a staking manager
+    cmds:
+      - task: _script
+        vars:
+          EXTRA_ARGS: script/tasks/ManagerStakingAccountant.s.sol:ManagerStakingAccountantScript --sig "deauthorizeStakingManager(string,address)" {{.CONFIG_JSON}} {{.MANAGER}}
+
+  convert-khype-to-hype:
+    desc: Calculate HYPE amount for given kHYPE
+    cmds:
+      - task: _script
+        vars:
+          EXTRA_ARGS: script/tasks/ManagerStakingAccountant.s.sol:ManagerStakingAccountantScript --sig "convertKHYPEToHYPE(string,uint256)" {{.CONFIG_JSON}} {{.AMOUNT}}
+
+  convert-hype-to-khype:
+    desc: Calculate kHYPE amount for given HYPE
+    cmds:
+      - task: _script
+        vars:
+          EXTRA_ARGS: script/tasks/ManagerStakingAccountant.s.sol:ManagerStakingAccountantScript --sig "convertHYPEToKHYPE(string,uint256)" {{.CONFIG_JSON}} {{.AMOUNT}}
+
+  # Treasury tasks
+  withdraw-token-from-spot:
+    desc: Withdraw any token from Spot balance (Treasury role)
+    cmds:
+      - task: _script
+        vars:
+          EXTRA_ARGS: script/tasks/TreasuryOperations.s.sol:TreasuryOperationsScript --sig "withdrawTokenFromSpot(string,uint64,uint64)" {{.CONFIG_JSON}} {{.TOKEN_ID}} {{.AMOUNT}}
+
+  rescue-token:
+    desc: Rescue tokens accidentally sent to the contract (Treasury role)
+    cmds:
+      - task: _script
+        vars:
+          EXTRA_ARGS: script/tasks/TreasuryOperations.s.sol:TreasuryOperationsScript --sig "rescueToken(string,address,uint256)" {{.CONFIG_JSON}} {{.TOKEN}} {{.AMOUNT}}
+
+  queue-l1-operations:
+    desc: Queue L1 operations directly for retry
+    cmds:
+      - task: _script
+        vars:
+          EXTRA_ARGS: script/tasks/OperatorStaking.s.sol:OperatorStakingScript --sig "queueL1Operations(string,address[],uint256[],uint8[])" {{.CONFIG_JSON}} {{.VALIDATORS}} {{.AMOUNTS}} {{.OPERATION_TYPES}}
+
+  process-l1-operations:
+    desc: Process pending L1 operations
+    cmds:
+      - task: _script
+        vars:
+          EXTRA_ARGS: script/tasks/OperatorStaking.s.sol:OperatorStakingScript --sig "processL1Operations(string,uint256)" {{.CONFIG_JSON}} {{.BATCH_SIZE}}
+
+  process-all-l1-operations:
+    desc: Process all pending L1 operations
+    cmds:
+      - task: _script
+        vars:
+          EXTRA_ARGS: script/tasks/OperatorStaking.s.sol:OperatorStakingScript --sig "processAllL1Operations(string)" {{.CONFIG_JSON}}
