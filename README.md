@@ -36,7 +36,7 @@ The 4naly3er report can be found [here](https://github.com/code-423n4/2025-04-ki
 ## Links
 
 - **Previous audits:**  [Zenith Audit report](https://github.com/code-423n4/2025-04-kinetiq/blob/main/audits/kinetiq-zenith.pdf), [Pashov Audit Group](https://github.com/code-423n4/2025-04-kinetiq/blob/main/audits/kinetiq-pashov.pdf)
-- **Documentation:** https://github.com/lst/tree/main/docs
+- **Documentation:** https://github.com/code-423n4/2025-04-kinetiq/tree/main/docs
 - **Website:** https://kinetiq.xyz/
 - **X/Twitter:** https://x.com/kinetiq_xyz
 
