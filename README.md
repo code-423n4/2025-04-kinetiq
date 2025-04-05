@@ -25,17 +25,88 @@ _Note for C4 wardens: Anything included in this `Automated Findings / Publicly K
 The 4naly3er report can be found [here](https://github.com/code-423n4/2025-04-kinetiq/blob/main/4naly3er-report.md).
 
 1. Some of the sanity checks and rules around the validator slashing mechanisms are assumptions based upon our current understanding
-1. The `generatePerformance` function is a sanity check and is unrelated to rewards or funds, we understand it has complex logic but would encourage auditors not to spend too much time on this function
+2. The `generatePerformance` function is a sanity check and is unrelated to rewards or funds, we understand it has complex logic but would encourage auditors not to spend too much time on this function
 
-✅ SCOUTS: Please format the response above 👆 so its not a wall of text and its readable.
 
 # Overview
 
-[ ⭐️ SPONSORS: add info here ]
+
+Kinetiq is a Liquid Staking protocol building on Hyperliquid. It allows users to stake their HYPE tokens and receive kHYPE tokens in return, enabling them to participate in network security while maintaining liquidity.
+
+## Features
+
+### Core Features
+- Deposit HYPE tokens to mint and receive kHYPE tokens
+- Liquid staking allows users to utilize their staked assets
+- Oracle-based performance tracking and reward distribution
+- Upgradeable smart contracts
+- Role-based access control
+
+### Advanced Features
+- Sophisticated validator management system
+- Performance-based stake allocation
+- Emergency withdrawal system with queue management
+- Historical performance tracking
+- Gas-optimized rebalancing mechanism
+
+## Smart Contracts
+
+1. **StakingManager**: 
+   - Manages staking and unstaking of HYPE tokens
+   - Implements HYPE buffer concept
+   - Handles withdrawal queuing and processing
+   - Manages validator delegation
+
+2. **KHYPE**: 
+   - ERC20 token representing Kinetiq staked HYPE
+   - Implements ERC20Permit for gasless approvals
+   - Role-based minting and burning
+
+3. **ValidatorManager**: 
+   - Performance tracking (uptime, speed, integrity, self-stake)
+   - Performance-based stake allocation
+   - Emergency withdrawal system
+   - Rebalancing mechanism
+   - Slashing protection
+
+4. **OracleManager**: 
+   - Manages oracle adapters
+   - Aggregates performance data
+   - Validates and processes updates
+   - Handles rewards and slashing events
+
+5. **PauserRegistry**: 
+   - Manages contract pause states
+   - Role-based pause control
+   - Emergency pause functionality
+
+## Key Mechanisms
+
+### Validator Management
+- Score-based stake allocation using Stakehub metrics
+- Dynamic rebalancing with gas optimization
+- Performance history tracking
+- Emergency withdrawal system with cooldown periods
+- Slashing protection mechanism
+
+### Oracle System
+- External data feeds for critical parameters
+- Challenge period for updates
+- Data integrity validation
+- Multiple source aggregation
+
+### Security Features
+- Emergency withdrawal system
+- Flexible pausing mechanism
+- Slashing protection
+- Performance monitoring
+- Stake limits and rebalancing thresholds
 
 ## Links
 
-- **Previous audits:**  [Zenith Audit report](https://github.com/code-423n4/2025-04-kinetiq/blob/main/audits/kinetiq-zenith.pdf), [Pashov Audit Group](https://github.com/code-423n4/2025-04-kinetiq/blob/main/audits/kinetiq-pashov.pdf)
+- **Previous audits:**
+  * [Zenith Audit report](https://github.com/code-423n4/2025-04-kinetiq/blob/main/audits/kinetiq-zenith.pdf)
+  * [Pashov Audit Group](https://github.com/code-423n4/2025-04-kinetiq/blob/main/audits/kinetiq-pashov.pdf)
 - **Documentation:** https://github.com/code-423n4/2025-04-kinetiq/tree/main/docs
 - **Website:** https://kinetiq.xyz/
 - **X/Twitter:** https://x.com/kinetiq_xyz
@@ -44,135 +115,44 @@ The 4naly3er report can be found [here](https://github.com/code-423n4/2025-04-ki
 
 # Scope
 
-[ ✅ SCOUTS: add scoping and technical details here ]
 
 ### Files in scope
-- ✅ This should be completed using the `metrics.md` file
-- ✅ Last row of the table should be Total: SLOC
-- ✅ SCOUTS: Have the sponsor review and and confirm in text the details in the section titled "Scoping Q amp; A"
 
 *See [scope.txt](https://github.com/code-423n4/2025-04-kinetiq/blob/main/scope.txt)*
 
-| File   | Logic Contracts | Interfaces | nSLOC | Purpose | Libraries used |
-| ------ | --------------- | ---------- | ----- | -----   | ------------ |
-| /src/oracles/DefaultAdapter.sol | 1| 1 | 24 | |@openzeppelin/contracts/utils/introspection/IERC165.sol|
-| /src/oracles/DefaultOracle.sol | 1| **** | 77 | |@openzeppelin/contracts/access/AccessControl.sol<br>@openzeppelin/contracts/utils/structs/EnumerableSet.sol|
-| /src/oracles/IOracleAdapter.sol | ****| 1 | 4 | |@openzeppelin/contracts/utils/introspection/IERC165.sol|
-| /src/KHYPE.sol | 1| **** | 43 | |@openzeppelin/contracts-upgradeable/access/extensions/AccessControlEnumerableUpgradeable.sol<br>@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20PermitUpgradeable.sol|
-| /src/OracleManager.sol | 1| **** | 212 | |@openzeppelin/contracts-upgradeable/access/extensions/AccessControlEnumerableUpgradeable.sol<br>@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol<br>@openzeppelin/contracts/utils/structs/EnumerableSet.sol<br>@openzeppelin/contracts/utils/math/Math.sol|
-| /src/PauserRegistry.sol | 1| **** | 75 | |@openzeppelin/contracts-upgradeable/access/extensions/AccessControlEnumerableUpgradeable.sol<br>@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol<br>@openzeppelin/contracts/utils/structs/EnumerableSet.sol|
-| /src/StakingAccountant.sol | 1| **** | 120 | |@openzeppelin/contracts-upgradeable/access/extensions/AccessControlEnumerableUpgradeable.sol<br>@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol<br>@openzeppelin/contracts/token/ERC20/IERC20.sol<br>@openzeppelin/contracts/utils/math/Math.sol<br>@openzeppelin/contracts/utils/structs/EnumerableMap.sol<br>@openzeppelin/contracts/utils/structs/EnumerableSet.sol|
-| /src/StakingManager.sol | 1| **** | 543 | |@openzeppelin/contracts-upgradeable/access/extensions/AccessControlEnumerableUpgradeable.sol<br>@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol<br>@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol<br>@openzeppelin/contracts/utils/structs/EnumerableSet.sol<br>@openzeppelin/contracts/token/ERC20/IERC20.sol<br>@openzeppelin/contracts/utils/math/Math.sol<br>@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol|
-| /src/ValidatorManager.sol | 1| **** | 234 | |@openzeppelin/contracts-upgradeable/access/extensions/AccessControlEnumerableUpgradeable.sol<br>@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol<br>@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol<br>@openzeppelin/contracts/utils/structs/EnumerableMap.sol<br>@openzeppelin/contracts/utils/structs/EnumerableSet.sol|
-| **Totals** | **8** | **2** | **1332** | | |
+| File                            | Logic Contracts | Interfaces | nSLOC    |
+|---------------------------------|-----------------|------------|----------|
+| /src/oracles/DefaultAdapter.sol | 1               | 1          | 24       |
+| /src/oracles/DefaultOracle.sol  | 1               | ****       | 77       |
+| /src/oracles/IOracleAdapter.sol | ****            | 1          | 4        |
+| /src/KHYPE.sol                  | 1               | ****       | 43       |
+| /src/OracleManager.sol          | 1               | ****       | 212      |
+| /src/PauserRegistry.sol         | 1               | ****       | 75       |
+| /src/StakingAccountant.sol      | 1               | ****       | 120      |
+| /src/StakingManager.sol         | 1               | ****       | 543      |
+| /src/ValidatorManager.sol       | 1               | ****       | 234      |
+| **Totals**                      | **8**           | **2**      | **1332** |
 
 
 ### Files out of scope
-✅ SCOUTS: List files/directories out of scope
 
 *See [out_of_scope.txt](https://github.com/code-423n4/2025-04-kinetiq/blob/main/out_of_scope.txt)*
 
-| File         |
-| ------------ |
-| ./script/DeployCore.s.sol |
-| ./script/DeployMockOracle.s.sol |
-| ./script/DeployOracle.s.sol |
-| ./script/DeployOracleAdapter.s.sol |
-| ./script/DeploySanityChecker.s.sol |
-| ./script/ManageRoles.s.sol |
-| ./script/tasks/ManagerOracle.s.sol |
-| ./script/tasks/ManagerRebalance.s.sol |
-| ./script/tasks/ManagerStakingAccountant.s.sol |
-| ./script/tasks/ManagerValidator.s.sol |
-| ./script/tasks/ManagerWhitelist.s.sol |
-| ./script/tasks/OperatorOracle.s.sol |
-| ./script/tasks/OperatorPerformance.s.sol |
-| ./script/tasks/OperatorStaking.s.sol |
-| ./script/tasks/TreasuryOperations.s.sol |
-| ./script/tasks/UserDeposit.s.sol |
-| ./script/tasks/UserWithdraw.s.sol |
-| ./src/interfaces/IKHYPE.sol |
-| ./src/interfaces/IOracleManager.sol |
-| ./src/interfaces/IPauserRegistry.sol |
-| ./src/interfaces/IStakingAccountant.sol |
-| ./src/interfaces/IStakingManager.sol |
-| ./src/interfaces/IValidatorManager.sol |
-| ./src/lib/L1Read.sol |
-| ./src/lib/L1Write.sol |
-| ./src/lib/MinimalImplementation.sol |
-| ./src/lib/SystemOracle.sol |
-| ./src/mocks/MockDefaultOracle.sol |
-| ./src/validators/IValidatorSanityChecker.sol |
-| ./src/validators/ValidatorSanityChecker.sol |
-| ./test/Base.t.sol |
-| ./test/KHYPE.t.sol |
-| ./test/OracleManager.t.sol |
-| ./test/PauserRegistry.t.sol |
-| ./test/StakingAccountant.t.sol |
-| ./test/StakingManager.t.sol |
-| ./test/ValidatorManager.t.sol |
-| Totals: 37 |
 
 ## Scoping Q &amp; A
 
 ### General questions
-### Are there any ERC20's in scope?: Yes
-
-✅ SCOUTS: If the answer above 👆 is "Yes", please add the tokens below 👇 to the table. Otherwise, update the column with "None".
-
-Specific tokens (please specify)
-HYPE on Hyperliquid EVM
-
-### Are there any ERC777's in scope?: No
-
-✅ SCOUTS: If the answer above 👆 is "Yes", please add the tokens below 👇 to the table. Otherwise, update the column with "None".
 
 
-
-### Are there any ERC721's in scope?: No
-
-✅ SCOUTS: If the answer above 👆 is "Yes", please add the tokens below 👇 to the table. Otherwise, update the column with "None".
-
-
-
-### Are there any ERC1155's in scope?: No
-
-✅ SCOUTS: If the answer above 👆 is "Yes", please add the tokens below 👇 to the table. Otherwise, update the column with "None".
-
-
-
-✅ SCOUTS: Once done populating the table below, please remove all the Q/A data above.
 
 | Question                                | Answer                       |
 | --------------------------------------- | ---------------------------- |
-| ERC20 used by the protocol              |       🖊️             |
-| Test coverage                           | ✅ SCOUTS: Please populate this after running the test coverage command                          |
-| ERC721 used  by the protocol            |            🖊️              |
-| ERC777 used by the protocol             |           🖊️                |
-| ERC1155 used by the protocol            |              🖊️            |
-| Chains the protocol will be deployed on | OtherHyperliquid EVM  |
-
-### ERC20 token behaviors in scope
-
-| Question                                                                                                                                                   | Answer |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
-| [Missing return values](https://github.com/d-xo/weird-erc20?tab=readme-ov-file#missing-return-values)                                                      |    |
-| [Fee on transfer](https://github.com/d-xo/weird-erc20?tab=readme-ov-file#fee-on-transfer)                                                                  |   |
-| [Balance changes outside of transfers](https://github.com/d-xo/weird-erc20?tab=readme-ov-file#balance-modifications-outside-of-transfers-rebasingairdrops) |    |
-| [Upgradeability](https://github.com/d-xo/weird-erc20?tab=readme-ov-file#upgradable-tokens)                                                                 |    |
-| [Flash minting](https://github.com/d-xo/weird-erc20?tab=readme-ov-file#flash-mintable-tokens)                                                              |    |
-| [Pausability](https://github.com/d-xo/weird-erc20?tab=readme-ov-file#pausable-tokens)                                                                      |    |
-| [Approval race protections](https://github.com/d-xo/weird-erc20?tab=readme-ov-file#approval-race-protections)                                              |    |
-| [Revert on approval to zero address](https://github.com/d-xo/weird-erc20?tab=readme-ov-file#revert-on-approval-to-zero-address)                            |    |
-| [Revert on zero value approvals](https://github.com/d-xo/weird-erc20?tab=readme-ov-file#revert-on-zero-value-approvals)                                    |    |
-| [Revert on zero value transfers](https://github.com/d-xo/weird-erc20?tab=readme-ov-file#revert-on-zero-value-transfers)                                    |    |
-| [Revert on transfer to the zero address](https://github.com/d-xo/weird-erc20?tab=readme-ov-file#revert-on-transfer-to-the-zero-address)                    |    |
-| [Revert on large approvals and/or transfers](https://github.com/d-xo/weird-erc20?tab=readme-ov-file#revert-on-large-approvals--transfers)                  |    |
-| [Doesn't revert on failure](https://github.com/d-xo/weird-erc20?tab=readme-ov-file#no-revert-on-failure)                                                   |    |
-| [Multiple token addresses](https://github.com/d-xo/weird-erc20?tab=readme-ov-file#revert-on-zero-value-transfers)                                          |    |
-| [Low decimals ( < 6)](https://github.com/d-xo/weird-erc20?tab=readme-ov-file#low-decimals)                                                                 |    |
-| [High decimals ( > 18)](https://github.com/d-xo/weird-erc20?tab=readme-ov-file#high-decimals)                                                              |    |
-| [Blocklists](https://github.com/d-xo/weird-erc20?tab=readme-ov-file#tokens-with-blocklists)                                                                |    |
+| ERC20 used by the protocol              |       HYPE on Hyperliquid EVM             |
+| Test coverage                           | 52% (495/952 statements)              |
+| ERC721 used  by the protocol            |            None              |
+| ERC777 used by the protocol             |           None                |
+| ERC1155 used by the protocol            |              None            |
+| Chains the protocol will be deployed on | Hyperliquid EVM  |
 
 ### External integrations (e.g., Uniswap) behavior in scope:
 
@@ -187,30 +167,19 @@ HYPE on Hyperliquid EVM
 ### EIP compliance checklist
 n/a
 
-✅ SCOUTS: Please format the response above 👆 using the template below👇
-
-| Question                                | Answer                       |
-| --------------------------------------- | ---------------------------- |
-| src/Token.sol                           | ERC20, ERC721                |
-| src/NFT.sol                             | ERC721                       |
 
 
 # Additional context
 
 ## Main invariants
-
 As a liquid staking protocol, our primary invariant is that 1 kHYPE === 1 HYPE
 
-
-
-✅ SCOUTS: Please format the response above 👆 so its not a wall of text and its readable.
 
 ## Attack ideas (where to focus for bugs)
 future upgradeability as hyperliquid is known to change things quickly and without notice, recovery from a compromised contract
 
 we also have some off chain components that help maintain protocol
 
-✅ SCOUTS: Please format the response above 👆 so its not a wall of text and its readable.
 
 ## All trusted roles in the protocol
 
@@ -225,40 +194,104 @@ Documentation to be provided
 
 ## Describe any novel or unique curve logic or mathematical models implemented in the contracts:
 
-https://github.com/kinetiq-research/lst/blob/dev/src/StakingAccountant.sol#L194-L222
+See [StakingAccountant.sol#L194-L222](https://github.com/code-423n4/2025-04-kinetiq/blob/main/src/StakingAccountant.sol#L194-L222)
 
-✅ SCOUTS: Please format the response above 👆 so its not a wall of text and its readable.
 
 ## Running tests
 
-Installation, setup and testing is all thoroughly documented in the README:
 
-https://github.com/kinetiq-research/lst/blob/dev/README.md#development
-
-✅ SCOUTS: Please format the response above 👆 using the template below👇
 
 ```bash
-git clone https://github.com/code-423n4/2023-08-arbitrum
-git submodule update --init --recursive
-cd governance
+git clone https://github.com/code-423n4/2025-04-kinetiq.git
+cd 2025-04-kinetiq
+
 foundryup
-make install
-make build
-make sc-election-test
+forge test
+
+# get coverage
+forge coverage
 ```
-To run code coverage
+
+Coverage:
+| File                                        | % Lines           | % Statements      | % Branches      | % Funcs         |
+|---------------------------------|-----------------|------------|----------| ---- |
+| src/KHYPE.sol                               | 84.62% (22/26)    | 80.00% (16/20)    | 10.00% (1/10)   | 85.71% (6/7)    |
+| src/OracleManager.sol                       | 79.37% (100/126)  | 79.85% (107/134)  | 12.50% (5/40)   | 76.47% (13/17)  |
+| src/PauserRegistry.sol                      | 95.92% (47/49)    | 95.83% (46/48)    | 4.35% (1/23)    | 100.00% (10/10) |
+| src/StakingAccountant.sol                   | 79.22% (61/77)    | 82.14% (69/84)    | 11.11% (3/27)   | 72.22% (13/18)  |
+| src/StakingManager.sol                      | 44.24% (165/373)  | 44.65% (171/383)  | 10.86% (19/175) | 42.55% (20/47)  |
+| src/ValidatorManager.sol                    | 76.74% (99/129)   | 76.58% (85/111)   | 6.06% (4/66)    | 80.00% (20/25)  |
+| src/lib/L1Read.sol                          | 0.00% (0/60)      | 0.00% (0/60)      | 0.00% (0/20)    | 0.00% (0/10)    |
+| src/lib/L1Write.sol                         | 14.29% (2/14)     | 14.29% (1/7)      | 100.00% (0/0)   | 14.29% (1/7)    |
+| src/lib/MinimalImplementation.sol           | 0.00% (0/1)       | 100.00% (0/0)     | 100.00% (0/0)   | 0.00% (0/1)     |
+| src/lib/SystemOracle.sol                    | 0.00% (0/13)      | 0.00% (0/8)       | 0.00% (0/2)     | 0.00% (0/5)     |
+| src/oracles/DefaultAdapter.sol              | 0.00% (0/11)      | 0.00% (0/8)       | 0.00% (0/2)     | 0.00% (0/5)     |
+| src/oracles/DefaultOracle.sol               | 0.00% (0/23)      | 0.00% (0/20)      | 0.00% (0/16)    | 0.00% (0/5)     |
+| src/validators/ValidatorSanityChecker.sol   | 0.00% (0/65)      | 0.00% (0/69)      | 0.00% (0/31)    | 0.00% (0/6)     |
+
+
+
+### Deploy
 ```bash
-make coverage
+# Deploy core contracts
+forge script script/DeployCore.s.sol \
+  --sig "run(string)" config/testnet.json \
+  --rpc-url $RPC_URL \
+  --broadcast \
+  --verify
 ```
-To run gas benchmarks
+
+### Integration Tasks
+
+#### User Operations
 ```bash
-make gas
+# Stake HYPE
+task deposit AMOUNT=1000000000000000000
+
+# Queue withdrawal
+task queue-withdrawal AMOUNT=1000000000000000000
+
+# Confirm withdrawal
+task confirm-withdrawal WITHDRAWAL_ID=0
+
+# Cancel withdrawal
+task cancel-withdrawal WITHDRAWAL_ID=0
 ```
 
-✅ SCOUTS: Add a screenshot of your terminal showing the gas report
-✅ SCOUTS: Add a screenshot of your terminal showing the test coverage
+#### Operator Operations
+```bash
+# Generate performance update
+task generate-performance
 
+# Set performance bound
+task set-performance-bound BOUND=10000
+```
 
+#### Manager Operations
+```bash
+# Validator management
+task activate-validator VALIDATOR=0x...
+task deactivate-validator VALIDATOR=0x...
+task set-delegation VALIDATOR=0x...
+
+# Rebalancing
+task rebalance-withdrawal VALIDATORS="[0x...]" AMOUNTS="[1000000000000000000]"
+task close-rebalance VALIDATORS="[0x...]"
+```
+
+## Project Structure
+
+```
+├── src/                # Smart contracts
+│   ├── interfaces/     # Contract interfaces
+│   ├── mocks/         # Mock contracts for testing
+│   └── oracles/       # Oracle adapters
+├── script/            # Deployment and task scripts
+│   ├── tasks/        # Integration task scripts
+│   └── Config.sol    # Configuration handling
+├── test/             # Test files
+└── config/           # Deployment configurations
+```
 
 ## Miscellaneous
 Employees of Kinetiq and employees' family members are ineligible to participate in this audit.
