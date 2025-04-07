@@ -57,6 +57,14 @@ Kinetiq is a Liquid Staking protocol building on Hyperliquid. It allows users to
    - Handles withdrawal queuing and processing
    - Manages validator delegation
 
+2. **StakingAccountant**:
+   - Tracks total staked HYPE across all staking managers
+   - Tracks total claimed HYPE
+   - Calculates the exchange ratio between HYPE and kHYPE tokens
+   - Manages multiple kHYPE tokens for different staking managers
+   - Provides conversion functions between HYPE and kHYPE
+   - Tracks unique kHYPE tokens to avoid double-counting
+
 2. **KHYPE**: 
    - ERC20 token representing Kinetiq staked HYPE
    - Implements ERC20Permit for gasless approvals
