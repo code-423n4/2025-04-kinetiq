@@ -1,0 +1,2157 @@
+==============================================================
+Guild: Code4rena
+Channel: ARCHIVE-PUBLIC / kinetiq-apr
+==============================================================
+
+[04/07/2025 00:33] itsmetechjay (pinned)
+👋 Hello and welcome to the $35,000 in USDC **Kinetiq** audit channel!
+
+📆 Audit opens Monday, 07 April 2025 20:00 (20:00 UTC) and runs through Wednesday, 16 April 2025 20:00 (20:00 UTC) (9 days).
+
+Please give a warm welcome to the Kinetiq team, particularly @sha3ns, @Justin | Kinetiq, and @Magnus, who will be available for questions either here in the channel or via a PRIVATE thread in the EST timezone. 
+
+🤖 **Documentation bot assistance:** For general questions about the codebase, give our documentation bot a try, by tagging `@Docs Wolf` in any thread (private or public) and asking your question. The bot will make its best attempt to answer based on the codebase and documentation, and link you to relevant resources. *Docs Wolf will be available when the audit is live.*
+
+We'll be posting relevant links, documentation, etc. here, so if you intend to participate in this audit, consider enabling notifications for this channel. 🐺 ⏰
+
+Audit Page: https://code4rena.com/audits/2025-04-kinetiq
+
+{Reactions}
+🔥 (7) 
+
+[04/07/2025 00:34] itsmetechjay
+Pinned a message.
+
+
+[04/07/2025 17:56] rudhra_52418
+Language ?
+
+
+[04/07/2025 18:01] itsmetechjay
+Solidity
+
+{Reactions}
+👍 
+
+[04/07/2025 20:19] itsmetechjay
+ℹ️  Note: The Docs Wolf will be available for this audit in the next couple of days. We appreciate your patience!
+
+{Reactions}
+👍 (3) 
+
+[04/07/2025 20:32] torpedopistolixc41
+updated foundry but still having this compile problem by the github code.
+
+{Attachments}
+Code4rena - ARCHIVE-PUBLIC - kinetiq-apr [1357825202360418534].txt_Files/sss-46E87.PNG
+
+
+[04/07/2025 21:11] victorokpukpan_
+nSloc?
+
+
+[04/07/2025 21:18] 0xspryon
+
+
+{Attachments}
+Code4rena - ARCHIVE-PUBLIC - kinetiq-apr [1357825202360418534].txt_Files/image-8EA8C.png
+
+{Reactions}
+❤️ (2) 
+
+[04/07/2025 21:24] 0xspryon
+@Justin | Kinetiq , @sha3ns , @Magnus 
+What are the various off-chain components that somewhat interact with the contracts in scope and from a bird's eye view, how do they interact with said contracts?
+
+
+[04/07/2025 21:57] enami_el
+After pashov audit and zenith audit I don’t see a chance hahah 🙂
+
+{Reactions}
+😂 (6) 😭 (3) 
+
+[04/07/2025 22:13] mike_bello90
+there is always a chance, I have found bugs in projects audited by OZ, spearbit, trailofbits, pashovgroup,  😁
+
+{Reactions}
+🫡 (7) 
+
+[04/07/2025 22:15] halalauditor
+Is this some troll or its facts😅
+
+{Reactions}
+😂 (4) 
+
+[04/07/2025 22:15] mike_bello90
+FACTS!
+
+{Reactions}
+🔥 (4) 
+
+[04/07/2025 23:50] shawn0245
+# Off-Chain Components Interacting with Kinetiq Protocol
+Based on the contract architecture and implementation, here are the key off-chain components that interact with the Kinetiq protocol:
+## 1. Oracle Adapters
+Purpose: Provide external validator performance data to the protocol
+Interactions:
+* Connect to external data sources to gather validator metrics
+* Implement the IOracleAdapter interface
+* Return performance metrics when called by OracleManager.generatePerformance()
+* Provide data on validator balance, uptime, speed, integrity, and self-stake
+* Track accumulated rewards and slashing amounts
+Flow:
+`External Data Sources → Oracle Adapters → OracleManager → ValidatorManager`
+
+## 2. Validator Sanity Checker
+Purpose: Validate oracle reports for suspicious or malicious data
+Interactions:
+* Implements the IValidatorSanityChecker interface
+* Called by OracleManager to verify validator metrics
+* Applies business logic to detect anomalies in validator behavior
+* Returns validation results to prevent malicious data from entering the system
+
+## 3. L1 Write Interface
+Purpose: Bridge between Ethereum and Hyperliquid for staking operations
+Interactions:
+* Receives operation requests from StakingManager
+* Executes deposit and withdrawal operations on Hyperliquid L1
+* Handles validator delegation on L1
+* Processes rebalancing operations between validators
+* Reports back operation results to the protocol
+Flow:
+`StakingManager → L1 Write Interface → Hyperliquid L1`
+
+
+[04/07/2025 23:50] shawn0245
+## 4. Operator Service
+Purpose: Executes operational tasks requiring active monitoring
+Interactions:
+* Calls StakingManager.executeL1Operations() to process queued operations
+* Triggers OracleManager.generatePerformance() to update validator metrics
+* Monitors validator performance and initiates rebalancing when needed
+* Requires OPERATOR_ROLE permissions across contracts
+
+## 5. Monitoring & Alerting System
+Purpose: Monitors protocol health and alerts on anomalies
+Interactions:
+* Watches for events emitted by protocol contracts
+* Monitors validator performance metrics
+* Alerts on suspicious activities or performance degradation
+* Tracks exchange ratio changes and liquidity metrics
+* May have SENTINEL_ROLE permissions to take emergency actions
+
+## 6. User Interface / dApp
+Purpose: Provides user access to protocol functions
+Interactions:
+* Connects users to staking and withdrawal functions
+* Displays protocol metrics and user balances
+* Shows validator performance and selection options
+* Facilitates user operations through web interface
+* Interacts primarily with StakingManager for user operations
+
+## 7. Governance System
+Purpose: Manages protocol parameters and upgrades
+Interactions:
+* Proposes and executes parameter changes
+* Manages role assignments across contracts
+* Coordinates protocol upgrades
+* May implement timelock mechanisms for sensitive changes
+* Likely holds DEFAULT_ADMIN_ROLE across contracts(multisig)
+
+
+[04/07/2025 23:52] shawn0245
+# Integration Diagram
+
+Use them privately, thanks
+
+{Attachments}
+Code4rena - ARCHIVE-PUBLIC - kinetiq-apr [1357825202360418534].txt_Files/image-2113B.png
+
+{Reactions}
+❤️ (14) 
+
+[04/07/2025 23:53] shawn0245
+@0xspryon
+
+
+[04/08/2025 01:57] harry_cryptodev
+what is Hype token?
+and where can i get source code of hype token?
+
+
+[04/08/2025 01:58] greenbergz
+it's the gas token for hyperliquid EVM
+
+
+[04/08/2025 02:01] greenbergz
+and the staked DPoS asset on hyperliquid core (HyperCore/L1)
+
+{Reactions}
+👍 (3) 
+
+[04/08/2025 02:02] greenbergz
+resources:
+- https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/staking
+- https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm
+
+
+[04/08/2025 02:03] harry_cryptodev
+thanks bro.
+
+
+[04/08/2025 04:34] samuselderg
+Hello Wardens! Docs Wolf is now up and running and available for your questions!
+
+🤖 **Documentation bot assistance:** For general questions about the codebase, give our documentation bot a try, by tagging `@Docs Wolf` in any thread (private or public) and asking your question. The bot will make its best attempt to answer based on the codebase and documentation, and link you to relevant resources.
+
+
+[04/08/2025 05:15] dulgiq
+@Justin | Kinetiq @sha3ns will we have access to Spearbit's audit report?
+
+
+[04/08/2025 06:18] tough111
+@Docs Wolf
+
+
+[04/08/2025 06:58] 0xspryon
+Thanks
+
+
+[04/08/2025 09:50] infectedfuture
+Code has been updated since previous audits? (beside fixes)
+
+
+[04/08/2025 11:44] 0xnomercy
+Started a thread.
+
+
+[04/08/2025 12:36] 0xmagnus
+We'll share once they release to us
+
+
+[04/08/2025 12:36] 0xmagnus
+Only to update fixes based on previous audits
+
+{Reactions}
+🙏 
+
+[04/08/2025 13:33] 0xgremlincat
+Hi sponsors @Justin | Kinetiq @sha3ns , how many decimals is Hype token in?
+
+
+[04/08/2025 13:53] shawn0245
+Hi @0xgremlincat auditor, decimals differ between HyperCore and HyperEVM. 
+HyperEVM uses 18 decimals, 
+HyperCore uses 8. 
+When L1Write on HyperEVM recognizes only 8 decimals, we’ll need to apply a decimal conversion on that.
+
+{Reactions}
+❤️ (3) 🫡 (3) 
+
+[04/08/2025 13:56] 0xgremlincat
+thank you!
+
+{Reactions}
+👍 
+
+[04/08/2025 14:20] shawn0245
+I saw multiple lines has the wrong comments on decimal definition 😂.
+given the commit `0881de8` to reduce the misunderstanding
+
+
+[04/08/2025 14:28] shawn0245
+make it clear again, 
+
+all exported/public methods except functions like `withdrawFromSpot` & `withdrawTokenFromSpot` , which directly interact with L1Write, are aligned into decimal 18
+all amount values except L1Write will align to decimal 18 including oracle.
+
+
+[04/08/2025 15:55] 0xarav
+Hi magnus, 
+I only see audits by pashov group and zenith 
+Was it also reviewd by spearbit ?
+cos i dont see it mentioned
+
+
+[04/08/2025 15:56] shawn0245
+They haven't provided the final report yet.
+
+
+[04/08/2025 15:57] 0xarav
+Ah ok, But I presume their suggested fixes have been made
+
+
+[04/08/2025 16:00] shawn0245
+yeah, they are in the final review stage; all fixes have been applied in the latest commit ID as sent.
+
+
+[04/08/2025 16:00] chibibridge
+I can't see 0881de8 in the repo (https://github.com/code-423n4/2025-04-kinetiq); which repo is it?
+
+
+[04/08/2025 16:00] 0xarav
+Alright !
+
+{Reactions}
+👍 
+
+[04/08/2025 16:06] shawn0245
+ahh, Idk if it is the right time to push into this repo, but those comments are incorrect
+
+{Attachments}
+Code4rena - ARCHIVE-PUBLIC - kinetiq-apr [1357825202360418534].txt_Files/image-237AC.png
+
+{Reactions}
+❤️ (3) 
+
+[04/08/2025 16:11] chibibridge
+thanks!
+
+{Reactions}
+👍 
+
+[04/08/2025 23:29] deeney3866
+has the previous audit issue been fix
+
+{Reactions}
+✅ 
+
+[04/09/2025 08:21] 0xmsf14
+People still find criticals on Immunefi bounties that have gone through several audits.
+
+{Reactions}
+💯 (5) 
+
+[04/09/2025 08:57] georgefalcon_
+is there a latest commit hash?
+
+
+[04/09/2025 09:00] georgefalcon_
+thanks!
+
+{Reactions}
+👍 
+
+[04/09/2025 14:28] 0xnomercy
+is `StakingManager.treasury` a smart contract or an EOA?
+
+
+[04/09/2025 15:27] loptuskr
+it's CA
+
+
+[04/09/2025 15:52] shawn0245
+multisig
+
+{Reactions}
+👍 
+
+[04/09/2025 19:42] keivou
+Hey guys, quite new here, do the people that stake in this protocol become validators of Hyperliquid or is the HYPE sent to actual validator nodes?
+
+
+[04/09/2025 19:43] jorgemasvidal
+i think 2nd one
+
+{Reactions}
+👌 (2) 
+
+[04/09/2025 19:43] jorgemasvidal
+pretty sure
+
+
+[04/09/2025 19:45] greenbergz
+confirmed, it's the latter
+
+
+[04/09/2025 19:47] infectedfuture
+**1)** what's the practical relationship between StakingManager and validators? (it seems like SM is delegated to only one validator)
+But at the same time, it manages operations for multiple validators. Is it in the case where the SM change delegation?
+**2) **So I suppose there must be multiple SM contracts. Who operate those? Validators to allow stakers to delegate to them through the SM?
+
+
+[04/09/2025 19:56] jorgemasvidal
+Hello, i have some questions:
+1) I see that L1Write.sol and the offchain Operator are out of scope, does this mean that a vulnerability that drains the L1 "pool" is out of scope?
+2) I see no tests regarding the withdrawal where there is an `operator` that calls processL1Operations, as described in the docs, that takes the HYPE from the L1 to the StakingManager. Instead, the HYPE is manually `deal`ed to the StakingManager. How can we test the Operator-L1 withdrawal process then? I'm new to this so sorry if i am mistaken.
+
+
+[04/09/2025 22:00] kyosi2963
+Can we get access or some form of docs what these l1Write methods used in the StakingManager do ?
+
+
+[04/10/2025 02:11] harry_cryptodev
+what does L1Write contract do?
+Only emit events?
+
+
+[04/10/2025 02:13] shawn0245
+yeah. pretty that much, the system contract connect between L1 and HyperEVM
+
+
+[04/10/2025 02:14] harry_cryptodev
+and backend handles the connection based on L1 events?
+
+
+[04/10/2025 02:14] shawn0245
+https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm/interacting-with-hypercore
+
+{Embed}
+https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm/interacting-with-hypercore
+Interacting with HyperCore | Hyperliquid Docs
+Code4rena - ARCHIVE-PUBLIC - kinetiq-apr [1357825202360418534].txt_Files/4PNnSZNgnVVlIrhj8wmg-AD85E
+
+
+[04/10/2025 02:15] shawn0245
+IMO, HyperCore(validator node) will handle those events based on EVM events
+
+
+[04/10/2025 02:15] shawn0245
+as HyperEVM also a part of validator node
+
+
+[04/10/2025 02:16] harry_cryptodev
+gotcha,
+thanks
+
+{Reactions}
+👍 
+
+[04/10/2025 02:18] pro_king1
+@sha3ns Does the protocol have any officials docs? without readme and other docs in the repo.
+
+
+[04/10/2025 02:24] shawn0245
+> 1) I see that L1Write.sol and the offchain Operator are out of scope, does this mean that a vulnerability that drains the L1 "pool" is out of scope?
+> 2) I see no tests regarding the withdrawal where there is an operator that calls processL1Operations, as described in the docs, that takes the HYPE from the L1 to the StakingManager. Instead, the HYPE is manually dealed to the StakingManager. How can we test the Operator-L1 withdrawal process then? I'm new to this so sorry if i am mistaken.
+1. That's unlikely to occur. We have robust sanity checks in place to ensure performance remains within a reasonable range (e.g., APY). Additionally, the entire solution operates under a non-custodial strategy, which further mitigates potential risks.
+
+2. The processL1Operations function handles pre-defined operations queued earlier in the protocol. We’re planning to expand test cases to improve coverage and ensure greater reliability.
+
+{Reactions}
+👍 
+
+[04/10/2025 02:25] shawn0245
+hasn’t been anything published yet, please refer to tech spec for now, thanks
+
+{Reactions}
+👍 
+
+[04/10/2025 02:26] chibibridge
+cancel-withdrawal task in taskfile is now deprecated, right?
+
+
+[04/10/2025 02:36] shawn0245
+no, we still have `cancelWithdrawal` method, but it looks will need to update the taskfile
+
+{Reactions}
+👍 
+
+[04/10/2025 05:42] c_moose
+Either [this document ](https://github.com/code-423n4/2025-04-kinetiq/blob/main/docs/smart-contract-architecture.md) is outdated or i'm on a different repo alltogether coz I can't find some function ( `requestWithdrawal`, `executeL1Operations` on the `StakingManager` for example). 
+
+If the doc is outdated, do we've updated one?
+
+
+[04/10/2025 07:42] kyosi2963
+Same for me :/
+
+
+[04/10/2025 07:45] infectedfuture
+hi @sha3ns, you missed my questions 😅  (I rewrote them a bit, sorry if it was confusing)
+in simple term, trying to understand what is a StakingManager in regard to Validators, and how many are they
+
+{Reactions}
+👀 
+
+[04/10/2025 09:08] deeney3866
+How can we reach the sponsor.
+
+
+[04/10/2025 09:10] kyosi2963
+Create a PT and tag them
+
+{Reactions}
+✅ 
+
+[04/10/2025 09:26] shawn0245
+Hi, sorry forget your question.
+
+> 1) what's the practical relationship between StakingManager and validators? (it seems like SM is delegated to only one validator)
+> But at the same time, it manages operations for multiple validators. Is it in the case where the SM change delegation?
+StakingManager and validators have a one-to-many relationship. By default, a user delegates to one validator, but assets can potentially be delegated to multiple validators through rebalancing.
+
+> 2) So I suppose there must be multiple SM contracts. Who operate those? Validators to allow stakers to delegate to them through the SM?
+Validator owners will maintain their own SM. Validators will welcome users to delegate through the protocol, boosted by a higher APY and benefits, including MEV, point programs, etc.
+
+{Reactions}
+🙏 (3) 
+
+[04/10/2025 09:38] infectedfuture
+thanks, this helps a lot
+regarding (1) though: 
+if theres a 1-to-many relationship between SM and validators, how is that the mapping `delegations[StakingManager]` (located in `ValidatorManager`) only stores 1 validator for a SM at a time?
+
+
+[04/10/2025 10:30] nadir_khan_sec
+Because there is only 1 SM owner (validator) at a time, i believe
+
+{Reactions}
+✅ 
+
+[04/10/2025 12:48] infectedfuture
+yeah, that how I see it. 
+1 SM can only be delegated to 1 validator (as shown by the mapping), but 1 validator can have multiple SM delegated to it.
+But still this don't answer to my question: then why 1 SM can queue operations (withdrawal/deposits) to any validator (e.g `queueL1Operations`)
+
+
+[04/10/2025 12:50] shawn0245
+right, We'll expose one delegate target at a time, without tracking all on-chain, using a more sophisticated algorithm off-chain to calculate the score and select the target delegation.
+
+
+[04/10/2025 12:53] shawn0245
+because we are just make it loose in rebalancing operation, even though we can queue operations to any validator, but its only withdrawal, stake must be a active validator
+
+{Reactions}
+👍 (3) 
+
+[04/10/2025 12:54] infectedfuture
+ok got it, thanks for your patience :10_10:
+
+{Reactions}
+👍 
+
+[04/10/2025 14:04] mrudenko
+@sha3ns sent DM
+
+{Reactions}
+👀 
+
+[04/10/2025 15:10] kyosi2963
+HYPE/KHYPE tokens would be 18 decimals both ,right ?
+
+
+[04/10/2025 16:12] riceee8969
+khype is 18 decimals, hype decimals vary between 8(hyper core), 18(hyper evm)
+
+{Reactions}
+👍 (2) 
+
+[04/10/2025 17:08] lucky2892000
+Hi @sha3ns , if we are going to use one KHYPE that is lined with HYPE token
+
+then why we have this unique kHYPE tokens or am i missing something  ?
+
+  // Track unique kHYPE tokens
+    EnumerableSet.AddressSet private _uniqueTokens;
+
+
+[04/10/2025 17:31] lucky2892000
+@Docs Wolf , can you explain for the above ?
+
+
+[04/10/2025 17:31] lucky2892000
+Hi @Jay | C4  , how to use docs wolf ?
+
+
+[04/10/2025 17:32] itsmetechjay
+You can start a public or private thread and then tag in the `@Docs Wolf`
+
+
+[04/11/2025 04:47] tough111
+Is there any explation of functions in L1Write.sol?
+
+
+[04/11/2025 05:34] shawn0245
+https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm/interacting-with-hypercore
+
+{Embed}
+https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm/interacting-with-hypercore
+Interacting with HyperCore | Hyperliquid Docs
+Code4rena - ARCHIVE-PUBLIC - kinetiq-apr [1357825202360418534].txt_Files/4PNnSZNgnVVlIrhj8wmg-AD85E
+
+
+[04/11/2025 05:46] 0xpiken
+Hey @sha3ns  How many StakingManager / KHYPE will be deployed?  What's the connection between different staking managers?   Why multi staking managers will use same KHYPE token? (Can we get an example to explain it in detail?)
+
+
+[04/11/2025 07:09] lucky2892000
+@sha3ns and also we have unique KHYPE tokens
+
+  // Track unique kHYPE tokens
+    EnumerableSet.AddressSet private _uniqueTokens;
+
+we need only one right ?
+
+{Reactions}
+👍 
+
+[04/11/2025 07:33] shawn0245
+atm there will be one, but also support multiple stakingManager to link to one token like a potential scale, so its many to one relation
+
+
+[04/11/2025 07:37] shawn0245
+basically we will deploy one stakingManager and one token for retail users, but it also possible we can switch stakingManager from A to B, by separate open & close deposit-pause and withdrawal-pause. when both of them link to one token
+
+
+[04/11/2025 07:39] shawn0245
+or just coexist
+
+
+[04/11/2025 11:16] elser17
+What is the difference between a SpotDeposit and UserDeposit operation? Why in UserDeposit HYPE is sent to L1_HYPE_CONTRACT while in SpotDeposit is not?
+
+
+[04/11/2025 11:16] elser17
+@sha3ns
+
+
+[04/11/2025 11:20] lucky2892000
+Hi @sha3ns , i have familiar with native ETH 
+
+if send HYPE token to a contract , will it triggers receive or fallback just like how ETH transfer works ?
+
+{Reactions}
+👍 ✅ 
+
+[04/11/2025 11:26] kyosi2963
+The native token in this case is going to be the HYPE token so receive function will be called
+
+{Reactions}
+👍 
+
+[04/11/2025 13:04] c_moose
+@sha3ns what's the idea behind buffers in the `StakingManager` contract?
+
+
+[04/11/2025 13:27] mrudenko
+hi @sha3ns ! Sent DM
+
+
+[04/11/2025 13:42] naman1778
+@Docs Wolf Do each stakingmanager have there individual validatorManager?
+
+
+[04/11/2025 13:49] itsmetechjay
+You'll need to tag `Docs Wolf` in a public or private thread.
+
+
+[04/11/2025 13:52] welith
+So that when users withdraw, it will first take from the buffer, instead of removing staked funds from active validators
+
+{Reactions}
+🫶 ✅ (2) 
+
+[04/11/2025 13:59] c_moose
+thank you fam
+
+
+[04/11/2025 14:28] riceee8969
+> StakingManager and validators have a one-to-many relationship. By default, a user delegates to one validator, but assets can potentially be delegated to multiple validators through rebalancing.
+
+Hello, Im not sure If I follow this, because as far as I understand the rebalancing withdraws from multiple validators the SM has delegated to and then redelegates it to the current validator that the SM is mapped to in ValidatorManager? 
+Do you mean when we change the delegation address for a SM and then delegate to the new validator via rebalancing?
+
+{Reactions}
+✅ 
+
+[04/11/2025 14:34] tough111
+In what case is the rebalanceWithdrawal function called by the manager, and what does the rebalanceWithdrawal function do?
+
+
+[04/11/2025 14:59] shawn0245
+SpotDeposit send HYPE from SpotAccount
+while UserDeposit send from EMV to SpotAccount as teh first step
+
+
+[04/11/2025 15:03] shawn0245
+provide the convenience of fast withdrawal to bypass the waiting period
+
+
+[04/11/2025 15:03] shawn0245
+no
+
+
+[04/11/2025 15:05] shawn0245
+its just rotate between validators
+
+
+[04/11/2025 15:05] shawn0245
+depending on their performance
+
+
+[04/11/2025 16:17] lucky2892000
+Hi @sha3ns , regarding oracles i have familiar with chainlink and uniswap Twap , but those are for prices and ours is for validator metrics 
+
+can you explain about how oracles works in an overview in kinetiq
+
+
+[04/11/2025 16:27] kyosi2963
+Oracles report off-chain data to the contract which updates values for a given validator, it also reports a slashing/reward events
+
+{Reactions}
+👍 (3) 
+
+[04/11/2025 23:08] arai6329
+Minter_role its EOA?
+
+
+[04/12/2025 05:11] lucky2892000
+@kyosi  , who is going to run these oracles , are we going to run in centralized way with trusted parties or decentralized way ?
+
+
+[04/12/2025 05:56] welith
+off-chain
+
+
+[04/12/2025 06:28] lucky2892000
+yes off chain only , but my question who and how it is going to run
+
+
+[04/12/2025 06:28] welith
+probably a bot
+
+
+[04/12/2025 06:29] lucky2892000
+what if that bot provides , wrong validator metrics ?
+
+
+[04/12/2025 06:30] welith
+the off-chain component providing validator info is a trusted agent
+
+{Reactions}
+👍 
+
+[04/12/2025 07:35] shawn0245
+For now, we will model it with an on-chain sanity check, e.g., the reward amount refers to APY.
+
+
+[04/12/2025 07:36] shawn0245
+In the future, we will decentralize the off-chain system by providing precise calculations aligned with start and end blocks.
+
+
+[04/12/2025 07:36] shawn0245
+Using Byzantine algorithm
+
+
+[04/12/2025 16:51] lucky2892000
+@sha3ns , i have seen this in the readme 
+As a liquid staking protocol, our primary invariant is that 1 kHYPE === 1 HYPE
+
+this will be only at initial right , before we withdraw any rewards that was earned by validators 
+
+if the rewards increases then the price of kHYPE will always be slightly higher than the HYPE right ?
+
+{Reactions}
+✅ 
+
+[04/12/2025 20:48] georgefalcon_
+when there's also a slashing event, the price of Khype would be slightly higher than Hype
+
+
+[04/13/2025 03:57] lucky2892000
+Higher ? , I was thinking it would be lower right ?
+
+If there is slashing then HYPE staked by user which we staked with the validator will be decreased 
+
+decrease in deposit stake will decrease the kHYPE right?
+
+{Reactions}
+✅ 
+
+[04/13/2025 05:53] lucky2892000
+@sha3ns ,  when you are checking the total supply we were looping through and calculating the total supply of  StakingAccountant::_uniqueTokens , if there is one , then looping is not needed , can i know the purpose of this ?
+
+
+[04/13/2025 09:06] yeahchibyke
+Hi sponsors @Justin | Kinetiq @sha3ns ... pardon me if this question is either stupid(very likely) or has been answered. 
+But, is there any particular reason why the KHYPE token contract is upgradeable? Especially when it has a pause functionality?
+
+
+[04/13/2025 09:42] sulaimon3546
+Are you working with the 8 decimal or 18 decimals hype
+
+
+[04/13/2025 09:53] rouhsamad
+Guys if you think someghing seems genuinely off, ask in a private thread
+Not pointing at anyone’s comment here, just making a general point
+
+{Reactions}
+👍 
+
+[04/13/2025 11:33] shawn0245
+why not?
+
+{Reactions}
+😐 
+
+[04/13/2025 11:34] shawn0245
+just wants to make sure even if we registe multiple vaults(stakingMangers) we can still have same supply
+
+
+[04/13/2025 11:35] 0xg03.14
+I'm really confused about spot, stake. And when sendTokenDelegate(true), will the funds move from delegated to stake balance or transferred to staking manager directly...? @sha3ns or anyone ..?
+
+
+[04/13/2025 11:35] shawn0245
+right, ratio will be decreased when there is a slashing
+
+
+[04/13/2025 11:36] shawn0245
+you may need to try yourself out on Hyperliquid, thats the core difference between EVM(Ethereum) and HyperEVM
+
+
+[04/13/2025 12:03] riceee8969
+> make it clear again, 
+> 
+> all exported/public methods except functions like withdrawFromSpot & withdrawTokenFromSpot , which directly interact with L1Write, are aligned into decimal 18
+> all amount values except L1Write will align to decimal 18 including oracle.
+cc @ sha3ns
+
+
+[04/13/2025 12:39] 0xg03.14
+is it possible to exist more 2 staking managers with 2 different kHYPE tokens..? @sha3ns
+
+
+[04/13/2025 12:56] yusufroqib
+https://github.com/code-423n4/2025-04-kinetiq/blob/main/docs/smart-contract-architecture.md#khype-token
+
+{Embed}
+https://github.com/code-423n4/2025-04-kinetiq/blob/main/docs/smart-contract-architecture.md
+2025-04-kinetiq/docs/smart-contract-architecture.md at main · code...
+Contribute to code-423n4/2025-04-kinetiq development by creating an account on GitHub.
+Code4rena - ARCHIVE-PUBLIC - kinetiq-apr [1357825202360418534].txt_Files/32e86af7-58bf-4524-8c68-71e7375a0e9f-7807B
+
+{Reactions}
+👍 
+
+[04/13/2025 12:59] yusufroqib
+@0xG0P1
+
+
+[04/13/2025 13:00] 0xg03.14
+does this mean yes..?
+
+
+[04/13/2025 13:00] yusufroqib
+Yes! That's it in the doc
+
+
+[04/13/2025 18:35] harry_cryptodev
+what is `HYPE_TOKEN_ID` in SM contract?
+
+
+[04/13/2025 19:54] 0xmsf14
+can we get the implementation of the L1write contract, not just the interface, I'd like to know how L1write.sendCDeposit differs from L1write.sendTokenDelegate
+
+
+[04/13/2025 20:06] infectedfuture
+That is the actual implementation. The contract emits events which are then processed by the nodes on the HyperCore (L1) side
+`sendCDeposit` move the tokens from the "spot" balance (which is the L1 balance) to "staking" balance (still on L1)
+`sendTokenDelegate` (un)delegate the "staking" balance from/to an operator depending on the boolean parameter
+
+{Reactions}
+👍 
+
+[04/13/2025 20:20] 0xmsf14
+Gracias
+
+
+[04/13/2025 20:23] 0xmsf14
+Also since the stakingManager can only distribute stake to one Validator at a time, when does the one-to-many other validator come in, will it be changed manually from the validatorManager ?
+
+
+[04/13/2025 20:28] infectedfuture
+from what I've understood, the SM only allow delegation to one validator at time (at least in the standard process, for users mostly)
+But there are 2 cases where some stake can be in others validators:
+
+{Reactions}
+👍 
+
+[04/13/2025 20:29] infectedfuture
+- if the SM changes for a new validator to delegate to. It may still have delegations in other validators. So, there should be a way to withdraw from those and redelegate to the new selected validator (this goes through `VM::rebalanceWithdrawal` and `VM::closeRebalanceRequests`
+
+{Reactions}
+👍 
+
+[04/13/2025 20:30] infectedfuture
+- Or maybe the admins wants to diversify how are distributed the delegated tokens, and then decide to undelegate some amount from the main operator and delegate to secondary operators (which seems possible through `SM::queueL1Operations`)
+
+
+[04/13/2025 20:31] infectedfuture
+Not sure about the second one though
+
+
+[04/14/2025 01:37] sepyke
+Yup. Looks like the official Hyper docs just give the interface and emitted events too: https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm/interacting-with-hypercore
+
+{Reactions}
+👍 
+
+[04/14/2025 01:46] sepyke
+that's basically the token ID on the HyperCore chain. HyperCore and HyperEVM let you link an asset (but just on testnet for now CMIIW)
+
+{Reactions}
+👍 
+
+[04/14/2025 09:46] riceee8969
+@sha3ns since the HL validator clients are not open sourced atm, do we consider MEV within the scope while auditing or not? Thank you.
+
+
+[04/14/2025 09:48] riceee8969
+I think its mostly just to rebalance the emergency withdrawals, but yeah what u stated is indeed possible
+
+
+[04/14/2025 12:00] pfapostol
+Could we assume that the same roles in different contracts belong to the same account?
+For example, `OracleManager.MANAGER_ROLE` and `StakingManager.MANAGER_ROLE` are the same account? Or is the names just a bit misleading?
+
+
+[04/14/2025 12:11] tough111
+It doesn't stake as much as allocated to the buffer, so there is no reward?
+
+
+[04/14/2025 15:30] greenbergz
+MEV is out of scope for this competition
+
+{Reactions}
+🫡 
+
+[04/14/2025 15:33] greenbergz
+this is the token id for the L1 asset, see: https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/asset-ids
+
+{Reactions}
+👍 
+
+[04/14/2025 16:37] 0xg03.14
+hey @sha3ns @Justin | Kinetiq  can you please check the PT..? Thanks
+
+
+[04/14/2025 19:41] harry_cryptodev
+How many issues so far? 😉
+
+{Reactions}
+💯 
+
+[04/15/2025 00:19] octeezy
+At what point are rewards distributed to KHYPE holders? is that something that happens off-chain or is it to be implemented in a future release?
+
+
+[04/15/2025 03:40] tough111
+How to Move HYPE from spot balance to EVM?
+
+
+[04/15/2025 05:37] thehxnz
+this button:
+
+{Attachments}
+Code4rena - ARCHIVE-PUBLIC - kinetiq-apr [1357825202360418534].txt_Files/image-FE2D5.png
+
+
+[04/15/2025 06:11] tough111
+where is this button?
+
+
+[04/15/2025 06:36] thehxnz
+on the balance sheet of hyperliquid.xyz
+
+
+[04/15/2025 09:05] welith
+The rewards change the ratio of the Hype to kHype token, so when withdrawing users will get more Hype. I think that this is the reward they get
+
+{Reactions}
+👍 thankyou 
+
+[04/15/2025 09:29] riceee8969
+Sorry I don’t follow this. Isn’t it happening via the exchange ratio of the tokens? As the above text says
+
+
+[04/15/2025 10:21] welith
+I don't think you have separate rewards. You delegate your HYPE to validators, and based on their actions, you will either get more (if they get rewarded) or lose (if they get slashed). It is like a vault, where kHype are the shares. The shares rise in value when the validators get rewarded and fall in value when they are slashed.
+
+{Reactions}
+🚀 (3) this (4) 👍 (2) 
+
+[04/15/2025 11:03] nadir_khan_sec
+My mistake, this is 100% correct
+
+
+[04/15/2025 14:35] rouhsamad
+How to open a pt? I dont see the option, do i need nitro? 👀🤔
+
+
+[04/15/2025 14:48] rouhsamad
+nvm found it
+
+{Reactions}
+hi5 
+
+[04/15/2025 18:51] lucky2892000
+i have a general question, any one can answer this 
+
+if i submit a bug as Medium and in real if it was High which is identified by Judge 
+
+will i get reward as a Medium or High or not eligible for rewards?
+
+
+[04/15/2025 18:53] lucky2892000
+and vice versa to , what if the High is downgraded to Medium ?
+
+
+[04/15/2025 19:00] _ae1ae_
+I think judges can up/down-grade between H & M, you can ask in the chat channel
+
+{Reactions}
+👍 (2) this 
+
+[04/15/2025 19:26] elser17
+Is there anyway that the ratio of HYPE/kHYPE of viceversa is not 1:1? Under what circumstances will kHYPE be minted?
+
+
+[04/15/2025 23:44] kyosi2963
+I guess if new rewards or penalties are reported by the oracle
+
+
+[04/16/2025 04:03] willycode20
+if there is a discrepancy between comment and code logic.
+Which should be more credible?🙏 
+I'm asking for my mental health😭
+
+
+[04/16/2025 04:20] 0xrochimaru
+Maybe this will help https://discord.com/channels/810916927919620096/1357825202360418534/1359197788747071792
+
+
+[04/16/2025 04:41] willycode20
+Helped a lot.... Totally skipped this
+Thanks
+
+{Reactions}
+✅ 
+
+[04/16/2025 06:27] 0xgremlincat
+hello sponsors! @sha3ns and @Justin | Kinetiq , just want to confirm, is frontrunning entirely out of scope? or case by case basis? thanks!
+
+
+[04/16/2025 06:30] riceee8969
+@0xgremlincat Acc to this MEV is out of scope, should mean frontrunning is oos but yeah a confirmation would be nice!
+
+{Reactions}
+➕ 
+
+[04/16/2025 06:31] mrfalsegenius
+@sha3ns @Justin | Kinetiq @Magnus Can I get a reply?
+
+
+[04/16/2025 06:31] mrfalsegenius
+https://tenor.com/view/please-pretty-gif-22543226
+
+{Embed}
+https://tenor.com/view/please-pretty-gif-22543226
+Code4rena - ARCHIVE-PUBLIC - kinetiq-apr [1357825202360418534].txt_Files/please-pretty-2DD58.png
+
+
+[04/16/2025 06:31] riceee8969
+you mean for frontrunning or some PT? xd
+
+{Reactions}
+🤣 
+
+[04/16/2025 06:31] mrfalsegenius
+PT
+
+
+[04/16/2025 06:32] riceee8969
+ahh
+
+
+[04/16/2025 07:44] rouhsamad
+@sha3ns pls check PT
+
+
+[04/16/2025 12:17] rouhsamad
+Wish there was more docs on when cancellations, redelegations, etc happen, with their timings, some operations timings ars so vague and i need to assume based on my understanding of the code
+
+{Reactions}
+💯 (6) 
+
+[04/16/2025 13:58] kyosi2963
+@sha3ns @Justin | Kinetiq Can u guys check the PT asap since there is not a lot more time left for this audit :/
+
+
+[04/16/2025 14:40] mrfalsegenius
+@sha3ns @Justin | Kinetiq @Magnus
+
+
+[04/16/2025 14:40] mrfalsegenius
+https://tenor.com/view/tobey-maguire-sad-wah-wahh-cry-gif-15729067800335956216
+
+{Embed}
+https://tenor.com/view/tobey-maguire-sad-wah-wahh-cry-gif-15729067800335956216
+Code4rena - ARCHIVE-PUBLIC - kinetiq-apr [1357825202360418534].txt_Files/tobey-maguire-sad-F196E.png
+
+{Reactions}
+😂 (2) 
+
+[04/16/2025 15:37] pabel0914
+does sponsors reply?
+
+
+[04/16/2025 15:45] rouhsamad
+I think ill just spray and pray
+
+{Reactions}
+🤣 (2) 
+
+[04/16/2025 16:07] kartoonjoy
+you may be joking but be careful with that. you dont want your submissions marked as spam and invalidated.
+
+
+[04/16/2025 16:10] pabel0914
+I can't find any reply from sponsors
+
+
+[04/16/2025 16:10] pabel0914
+could you help me?
+
+
+[04/16/2025 16:11] rouhsamad
+Just joking, i didnt mean spamming AI issues or nonesense
+
+
+[04/16/2025 16:12] kartoonjoy
+I figured but just wanted to caution still. thank you = )
+
+{Reactions}
+✅ (2) 
+
+[04/16/2025 16:13] kartoonjoy
+can you utilize the doc wolf?
+
+
+[04/16/2025 16:15] rouhsamad
+Same, have some important questions
+
+
+[04/16/2025 16:30] itsmetechjay
+@Pabel @rsam_eth the sponsor replied to both of your threads earlier today.  I understand that you have follow up questions, but they are actively doing their best to answer the questions they can, given that the audit is ending soon.
+
+{Reactions}
+👍 
+
+[04/16/2025 19:59] harry_cryptodev
+How many total?
+
+
+[04/16/2025 20:02] C4
+**🚨 AUDIT ALERT**
+
+@🐺Wardens The **Kinetiq** audit is now closed! Huge thanks to everyone who participated 🔍, whether you submitted a finding or not.
+
+What's next: The sponsor team and judge will review the findings over the next couple of weeks.
+
+
+[04/16/2025 20:03] pfapostol
+1083
+
+{Reactions}
+💀 (11) 
+
+[04/16/2025 20:04] harry_cryptodev
+yes, just found 3. 🤐
+
+
+[04/16/2025 21:43] francise._
+Toughh
+
+{Reactions}
+😂 
+
+[04/16/2025 22:59] izuman
+That is alot, good luck everyone:c4services:
+
+
+[04/17/2025 02:40] _ae1ae_
+LMAO, I need to see this guy's reaction now 😂
+
+{Attachments}
+Code4rena - ARCHIVE-PUBLIC - kinetiq-apr [1357825202360418534].txt_Files/Screenshot_From_2025-04-17_04-38-48-EA172.png
+
+{Reactions}
+😂 (8) 🤣 (5) 👍🏻 
+
+[04/17/2025 03:50] izuman
+Haha, ya the code changed alot after the previous audits.
+
+
+[04/17/2025 04:18] chibibridge
+out of curiosity how did you know
+
+
+[04/17/2025 04:22] chibibridge
+nvm found out, newbie issue
+
+
+[04/17/2025 04:36] tough111
+?
+
+{Reactions}
+💯 (3) 😂 (5) 
+
+[04/21/2025 18:19] loptuskr
+https://code4rena.com/audits/2025-04-kinetiq/submissions/S-244
+
+hey guys, do you know why there are no comments or trigger results in my reports yet?
+
+{Embed}
+https://code4rena.com/audits/2025-04-kinetiq/submissions/S-244
+S-244 evaluate submission | Code4rena
+Code4rena is a competitive audit platform that finds more high-severity vulnerabilities, more quickly than any other auditing method.
+Code4rena - ARCHIVE-PUBLIC - kinetiq-apr [1357825202360418534].txt_Files/c4-og-v2-64B78.png
+
+
+[04/21/2025 18:40] thebrittfactor
+Validation is still in progress. We should be ready to proceed to the next stage tomorrow.
+
+
+[04/21/2025 18:49] loptuskr
+thx very much! @thebrittfactor | C4
+
+{Reactions}
+hi5 
+
+[04/22/2025 16:20] riceee8969
+Does the judge reasses all issues marked as invalid as well?
+
+{Reactions}
+👆 
+
+[04/22/2025 17:31] itsmetechjay
+Every submission is reviewed by the judge except any that are labeled as spam.
+
+
+[04/23/2025 02:46] quanna2121
+Does the judge re-evaluate the duplication of issues? I noticed that many issues were incorrectly assessed as duplicates.
+
+
+[04/23/2025 05:48] riceee8969
+Thank you. So the main task of a validator is to filter out spam reports?
+
+
+[04/23/2025 05:49] riceee8969
+I think so, since they review all submissions
+
+
+[04/23/2025 09:08] cloudellie
+Yes
+
+
+[04/23/2025 09:08] cloudellie
+The Validator role is explained here: https://docs.code4rena.com/roles/validators
+
+{Embed}
+https://docs.code4rena.com/roles/validators
+Validators | Code4rena
+
+{Reactions}
+thankyou 
+
+[04/23/2025 14:03] loptuskr
+where can i find information ab "Acknowledged mark"?
+
+
+[04/24/2025 13:00] sulaimon3546
+Anyone answer to this question
+
+
+[04/24/2025 13:08] pfapostol
+Indirectly it mentioned in docs.
+This mark means what the word usually means. In simple terms, "the sponsor has agreed that there is some degree of a issue, but has no plans to fix it."
+
+{Reactions}
+👍🏻 
+
+[04/24/2025 13:12] sulaimon3546
+Oh which means sponsor might not see it has a bug worthy of reward. Because i submitted an issue marked it has medium but saw comment on it has QA but it was acknowledged.
+
+
+[04/24/2025 13:13] pfapostol
+The tags for the validation and sponsor review should not interest you at all. The only thing you should care about is the judge's decision.
+
+
+[04/24/2025 13:18] sulaimon3546
+That means i need to wait for the judge decision then. Thank you
+
+{Reactions}
+💯 
+
+[04/24/2025 13:20] loptuskr
+thanks you!
+
+
+[04/24/2025 15:04] elvisvan
+maybe you can write it
+
+{Reactions}
+👀 
+
+[04/24/2025 17:06] sulaimon3546
+if i submitted a finding as high but it was marked as a medium is there any chance of getting rewarded or not
+
+
+[04/24/2025 17:14] thebrittfactor
+The judge will determine validity and severity of the issue once they review. If it's downgraded and noted as a valid/sufficient medium, you would be awarded. There's more info [on our awarding process](https://docs.code4rena.com/awarding/awarding-process#awarding-process) in our docs 🙂
+
+{Reactions}
+✅ (2) 
+
+[04/24/2025 17:16] sulaimon3546
+Thank you
+
+{Reactions}
+hi5 
+
+[04/24/2025 21:02] chibibridge
+If an issue shows as "Post-judging QA", can we give some input? because the judging and dispute for that specific issue seems wrong
+
+
+[04/24/2025 21:19] loptuskr
+actually you can't🥲
+
+
+[04/24/2025 21:28] chibibridge
+That's interesting. I see. I think the protocol will instantly brick without the proper fix... most reports are wrong about the root causes
+
+{Reactions}
+😭 
+
+[04/25/2025 03:33] chibibridge
+And I’m worried if judges are also not aware of their actual semantics in detail
+
+
+[04/25/2025 04:34] pfapostol
+It is not a PJQA yet, probably visual bug.
+
+
+[04/25/2025 08:34] sulaimon3546
+Seems the contest is already in post-judging QA
+
+
+[04/25/2025 09:45] francise._
+Yeah I wanted to ask the same thing
+
+
+[04/25/2025 11:24] pfapostol
+It is literally not. Contests page says "Judging" + when PJQA starts SR wardens get a notification.
+
+
+[04/25/2025 11:26] sulaimon3546
+Cool which means all submissions that shows judging complete might not be completed 🤔
+
+
+[04/25/2025 11:27] pfapostol
+Yes, none of them has any judging tags. It is just visual bug.
+
+{Reactions}
+✅ 👍 
+
+[04/26/2025 08:17] mrseyed971_30047
+One of my reports has the label "insufficient" crossed out. Is new information needed? What should I do?
+
+
+[04/26/2025 08:26] chibibridge
+Some input
+- F-245 and S-28 is not duplicate; hypercore does not allow queueing withdrawals (cWithdraw == staking -> spot transfer) more than 5 at a time per address, which generates different type of DoS
+- S-95 and possibly others shows that DoS occurs even if batchSize is small because `delete` is costly
+I have other issues to comment but they are marked as invalid, so will wait for judge.. just some comments for sponosor comments for now
+
+
+[04/26/2025 13:28] rouhsamad
+What does it mean if a report is marked as acknowledged and it clearly shows a bug, i am confused, does it mean its out of scope or what?
+
+
+[04/26/2025 13:55] loptuskr
+i think that means it's valid but it won't be fixed
+
+
+[04/26/2025 13:55] loptuskr
+.
+
+
+[04/26/2025 14:10] rouhsamad
+Ok thanks
+
+
+[04/26/2025 16:03] sulaimon3546
+Is there any difference between QA and low?  Because some findings are demoted from High, Medium to Low which i think low are not valid for any reward
+
+
+[04/26/2025 17:28] riceee8969
+S-872  is wrongly duped to F-278, it talks about a completely different issue than the finding group.
+
+
+[04/26/2025 17:32] riceee8969
+Also how is S-854 not a dup of the validated F-31 ?
+
+
+[04/26/2025 20:12] mrudenko
+It's really weird judging:
+Bug which eligible for reward - F-36 . My issue(the same, but marked as invalid) -F-124
+
+Another bug eligible for reward - F-278
+My issue: F-261 - I had the same reccomendation, but my issue marked as invalid, instead F-278 marked as eligible for reward
+
+
+[04/26/2025 20:13] mrudenko
+How to make dispute for issues?
+
+
+[04/26/2025 20:36] laquica6728
+Except you have SR role, I doubt you can
+
+
+[04/27/2025 00:08] ykuio
+My finding got incorrectly duplicated to F-44 what can I do? Im not SR
+
+
+[04/27/2025 02:19] 0xgremlincat
+S-986 wrongly duped with F-177. No SR role so hoping for the judge to see this 🐸
+
+
+[04/27/2025 02:59] jeremias797
+https://code4rena.com/audits/2025-04-kinetiq/submissions/S-984
+
+
+[04/27/2025 02:59] jeremias797
+I guess I'm in no conndition to complain. But if possible, I'd still appreciate to hear someone's thoughts
+
+
+[04/27/2025 05:58] komronkhisomov
+I really dont like the condition about having SR role for disputing  ur submissions, i would understand if there were comments of judges explaining why submissions are invalid or insufficient but some of them are empty and u should guess. Moreover judge are prone to make mistakes, there can be a moment when an experienced auditor first time participates in contest, judge makes mistakes and marks invalid (for example), however participant do not have right to leave comment
+
+{Reactions}
+👍 (5) 💯 
+
+[04/27/2025 07:20] anime.consumer
+what does this means..
+
+{Attachments}
+Code4rena - ARCHIVE-PUBLIC - kinetiq-apr [1357825202360418534].txt_Files/image-92B17.png
+
+
+[04/27/2025 07:39] loptuskr
+that means the bug severity is low (downgrade)
+
+
+[04/27/2025 09:06] knight18695
+Enforcing POC for those with signal less than 0.6 that  I understand 
+Penalising folks who consistently submit spam report That I also get 
+But shutting the door to escalate and appeal to the judge for an issue you feel was wrongly marked that sound so unfair and out of it to me 🥲 🥲 And I so question the logic behind this
+
+{Reactions}
+💯 (2) 
+
+[04/27/2025 09:10] mrfalsegenius
+Code4rena:
+
+
+[04/27/2025 09:10] mrfalsegenius
+https://tenor.com/view/welcome-to-my-world-im-the-boss-this-is-my-world-this-is-how-things-are-done-jon-taffer-gif-16948378
+
+{Embed}
+https://tenor.com/view/welcome-to-my-world-im-the-boss-this-is-my-world-this-is-how-things-are-done-jon-taffer-gif-16948378
+Code4rena - ARCHIVE-PUBLIC - kinetiq-apr [1357825202360418534].txt_Files/welcome-to-my-world-im-the-boss-440A5.png
+
+{Reactions}
+😂 (3) 😭 
+
+[04/27/2025 09:37] anime.consumer
+By the comment on my report I can clearly say the judge have not read the full report..
+
+
+[04/27/2025 09:39] jorgemasvidal
+not my findings, but just curious, how come S-176 (invalid) is not the exact same as F-278 (high valid)
+
+
+[04/27/2025 13:47] mrudenko
+I have the same questions, lol😂
+
+
+[04/27/2025 14:34] rouhsamad
+I think both are invalid, balance of staking manager is increased internally, not by transferring native tokens to it through a transaction, so receive function is not called in this case
+
+This is what i read in hyperliquid discord channel
+
+
+[04/27/2025 14:47] mrudenko
+Staking Manager is contract on EVM. Its balance can be increased only with `receive` of with `stake` function
+Another way to send money to smart contract via selfdestruct - which is not related anymore. How balance of this smart contract can be increased more?
+
+
+[04/27/2025 14:57] rouhsamad
+I mean when transferring assets from HyperliquidCore to HyperliquidEVM, the "receive" function of stakingManager is not called, this is what sponsor commented in the sponsor review phase:
+"Bridging native token on Hyperliquid from Core to EVM is not a bridging transfer, it will directory adjust balance to the receive account(current impl)"
+
+
+[04/27/2025 15:25] mrudenko
+But confirm withdrawal function should fail anyway, because value of balance of staking manager will be no more than buffer size, so it’s impossible to withdraw from it
+
+
+[04/27/2025 18:13] chibibridge
+And that's not true.. I can confirm. It calls receive() instead, with 30k fixed gas for native token (HYPE) and 200k gas for other spot tokens
+
+
+[04/27/2025 18:20] chibibridge
+For example, this is a system tx (bridging tx) with the gas is set to 0x7530 (30000) - it's a transaction with hardcoded gas
+```sh
+$ export ETH_RPC_URL=https://rpc.hyperliquid.xyz/evm
+$ cast rpc eth_getSystemTxsByBlockNumber 0x2eb819
+[{"type":"0x0","chainId":"0x3e7","nonce":"0x25262","gasPrice":"0x0","gas":"0x7530","to":"0x4eea9547a69cde41a4665fe21bf94ecf1799bc09","value":"0xf6621cebc53e400","input":"0x",...,"blockHash":"0x638a11ab4bdd52c71d0108faba761594cb75caaa9b41399b6a9cca986ace2574","blockNumber":"0x2eb819","transactionIndex":"0x0",}, ...]
+```
+
+
+[04/27/2025 20:07] mrudenko
+hmm, but why sponsor marked it as invalid?
+
+
+[04/27/2025 20:18] 0xrochimaru
+Hey, Does everyone agree to downgrading of **S-1049**? I'm not sure if we are allowed to discuss submissions here. I'll delete it if we are not
+
+
+[04/27/2025 21:15] chibibridge
+hyperevm precompiles' semantics are not widely known well yet, so uploading my input here
+
+
+[04/27/2025 21:23] sulaimon3546
+I don't know the reason why this finding was downgraded to low 🤷🏿‍♂️. I think there should be more context for judging
+
+{Attachments}
+Code4rena - ARCHIVE-PUBLIC - kinetiq-apr [1357825202360418534].txt_Files/Screenshot_2025-04-27-22-21-26-297_com.and-A6DFF.jpg
+
+
+[04/27/2025 21:24] sulaimon3546
+Judging should not be what you see is what you get though
+
+
+[04/28/2025 01:12] ykuio
+How can F-31 be medium if there is no loss of funds?
+
+
+[04/28/2025 02:39] chibibridge
+Regarding this, it was F-52; if it's is not fixed then the protocol is guaranteed to brick after the first deployment..
+
+
+[04/28/2025 03:33] 0xpiken
+Agree. Bridging HYPE from HyperCore to HyperEVM doesn't trigger receive() function. I have tried `L1Write#sendSpot()` to bridge HYPE on testnet. No other HYPE transferring transaction was created while the balance on EVM increased.
+
+
+[04/28/2025 04:41] chibibridge
+It's not shown as transactions in block, but visible via separate RPC call for the corresponding (next) block https://discord.com/channels/810916927919620096/1357825202360418534/1366116869123346432
+
+{Reactions}
+💯 
+
+[04/28/2025 04:41] riceee8969
+Weird, i deployed a minimal contract on testnet to test it, everytime I tried transferring hype from core to evm receive is triggered
+
+{Reactions}
+💯 
+
+[04/28/2025 05:43] 0xpiken
+I was wrong. `receive()` was triggered on testnet.
+
+{Reactions}
+👍 
+
+[04/28/2025 09:57] vangrim
+I don't think I've ever seen so many invalidated findings. Just page after page with invalid findings
+
+
+[04/28/2025 10:31] knight18695
+How is issue  S-1101 a duplicate of F-42
+
+
+[04/28/2025 16:29] marchev
+This is actually incorrect.
+
+Bridging from L1 to L2 via `L1Write.sendCWithdrawal()` does not trigger `receive()`. Funds are debited to the address internally by the DLT *without* calling the `receive()` function.
+
+I had the same lead during the contest and PoC'ed it. `receive()` doesn't get triggered when funds get bridged from L1 to L2.
+
+
+[04/28/2025 16:33] marchev
+You could try it yourself if you want to. Here's a dummy contract that I used: https://gist.github.com/marchev/e3e5961b46cd83f8627877a7a543953a
+
+I send some HYPE to it, called `sendToL1()` and then called `withdrawFromL1()` a couple of times.
+
+These are the raw events logged: https://gist.github.com/marchev/955f4b58b1ddf776c6342dba42c72035
+
+As you could see the `FundsReceived()` event (topic sig = `0x363f315f930a17d1266b86a20d6dd34b1cfbc5a9db9f13a65d06a689c3a2af8a`) gets emitted only once - when I initially sent HYPE to the contract. The rest of the events emitted are only `FundsSentToL1` (`0x2f0ee555dd7d67b0db08b982b98eb2e27b97ac8d095b4e6df3463c0ba24456a8`) and `FundsWithdrawnFromL1` (`0xfb458abb5739063ac2bcec06d804af3322a68d69d66a0886080f566922c54c0c`).
+
+{Reactions}
+👍 
+
+[04/28/2025 16:34] riceee8969
+i think u are confused, we use sendSpot for transferring funds from core to EVM. sendCWithdrawal transfers it from staking account to core spot account which are both on the core side of HyperLiquid
+
+{Reactions}
+👍 
+
+[04/28/2025 16:36] marchev
+Ahh.. you're right. Pardon my myopia.
+
+Does `sendSpot` trigger `receive()`?
+
+{Reactions}
+👍 
+
+[04/28/2025 16:45] riceee8969
+Yup, atleast according to the testnet interaction.
+
+
+[04/28/2025 17:21] chibibridge
+sendSpot to 0x222..22 will trigger receive() with 30k gas in the next evm block as system txs
+
+
+[04/28/2025 17:21] marchev
+Started a thread.
+
+
+[04/28/2025 18:08] rouhsamad
+Even in hyper channel there are different opinions from admins. i guess if you have tested and it triggers receive(), then thats the case
+
+
+[04/28/2025 19:08] marchev
+Could you please share the contract source + txn hash?
+
+For some reason, I could not get it to bridge any HYPE from L1 to L2 on testnet.
+
+
+[04/29/2025 08:05] riceee8969
+Will do once im on pc!
+
+
+[04/29/2025 16:41] chibibridge
+and now it shows as PJQA phase while it marked as invalid..🙁 ok
+
+
+[04/29/2025 17:42] samueltroydomi
+I have a question and this is not a from an annoyed or angered stance - but i have 4 medium valid findings that have been marked as valid - but all downgraded to low. I dont understand why they are downgraded to low because they involve loss of funds or incorrect transfer amounts which will lose value for the protocol or for the user in each scenario ? Is there any reason why they are downgraded to low even though they result is loss of funds for user and protocol ? Im just looking for context , thank you. Also, if they are all kept as doengraded to low, are they eligible for rewards or no?
+
+
+[04/29/2025 17:43] laquica6728
+No rewards for that bro
+
+
+[04/29/2025 17:43] riceee8969
+I still do not understand how S-854 is not duplicate of  F-31, the validators comment on the report genuinely makes no sense to me.
+
+Moreover S-1051 has no even been judged in the judging phase.
+
+
+[04/29/2025 17:46] riceee8969
+~~S-872 is wrongly duped too 🙂 it talks about a completely different issue than `receive` getting triggered on transfer from core.~~
+
+Edit: The root cause of this issue is also the same issue due to core -> evm calls triggering `recieve` but results in out of gas so the funds get frozen in they system contract and never reach the EVM contract.
+
+{Reactions}
+👍 
+
+[04/29/2025 17:53] riceee8969
+Also why is F-18 a medium issue can someone explain it  to me? 
+
+I marked it as Low because the admins can use `queueL1Opeartions `to process the validator redelegation as the amount is present in staking account. So will not lead to any kind of DoS only the `processValidatorRedelegation `functionality is nerfed? So why is it considered a medium issue? if there is no loss of funds or any obstruction in the flow of  protocol?
+
+{Reactions}
+👍 (2) 
+
+[04/29/2025 19:14] chibibridge
+It'd be great if live judging are applied to this contest as well, could you consider it?
+
+
+[04/29/2025 19:27] chibibridge
+F-52, F-245, F-34 should be valid for the following reason:
+- F-52: validated in this channel https://discord.com/channels/810916927919620096/1366686744753340466/1366688345484165161
+- S-28: afaik no other reports are mentioning that unstaking will be silently omitted in hypercore if there are already 5 entries (if there are any feel free to merge the reports)
+  - This is not F-245
+- S-95: It's DoS due to array delete, which also occurs with small batchSize - the final entries in the queue cannot be processed due to the delete.
+
+
+[04/29/2025 21:10] laquica6728
+Isn’t it too late for that already ?
+
+
+[04/29/2025 21:34] chibibridge
+Yes I think so.. anyways I mentioned them before and these were not reflected again, so just reposting hoping it’s reconsidered.😅
+
+
+[04/29/2025 21:35] chibibridge
+Anyways hopefully these issues are fixed, rewarded or not
+
+
+[04/29/2025 22:23] laquica6728
+Fresh
+
+
+[04/30/2025 02:06] quanna2121
+I think the judges only reevaluate the severity of the primary issue and don’t reevaluate the duplication of the issues.
+
+
+[04/30/2025 03:27] riceee8969
+Facts, im 100% sure the judge doesn’t go through all the issues (except ones marked as spam) again in judging phase. I dont even understand the point tbh if the judge and validator are gonna be the same person.
+
+{Reactions}
+👍 (2) 
+
+[04/30/2025 04:10] 0xg03.14
+why im unable to comment during pjqa
+
+
+[04/30/2025 04:11] 0xg03.14
+due to signal score. i have 46%
+
+
+[04/30/2025 04:11] 0xg03.14
+..?
+
+
+[04/30/2025 04:52] daniel526
+i guess you're lacking the SR role
+
+
+[04/30/2025 06:39] knight18695
+Please how do  we resolve the wrongduplication atleast
+
+
+[04/30/2025 06:40] knight18695
+I think mine was wrongly duplicated in F-42
+
+
+[04/30/2025 06:41] knight18695
+what then happens if it was wrongly duplicated ?
+
+
+[04/30/2025 07:21] quanna2121
+I don’t know, my first time auditing on Code4rena
+
+
+[04/30/2025 07:53] sulaimon3546
+My finding was downgraded to low without no reason or comments by judges or validators 🤷🏿‍♂️
+
+
+[04/30/2025 12:58] chibibridge
+- F-52 and S-1051 seems to point the same issue.
+- F-280 might be duplicate with other receive()-related issues in root-cause wise, but the problem is their root cause analysis and suggestions to fix is rough or wrong. But I think F-280 can be grouped with other issues if appropriate.
+
+{Reactions}
+👍 (4) 
+
+[04/30/2025 13:25] chibibridge
+(Apologies for the repeated mention)
+Also although S-28 is marked as a duplicate of F-245, it's actually a distinct issue and should be addressed separately; I understand that it's not documented in the HL docs, but I confirmed its presence by running the PoC. More than 5 withdrawals in withdrawal queue will be silently omitted by HyperCore, which seems like a problem.
+
+{Reactions}
+✅ 
+
+[04/30/2025 13:35] riceee8969
+Just an update on this one incase the judges see it. @chibi explained me the reason why the funds never reach the evm contract in the scenario presented in `S-872`:thankyou:
+
+{Reactions}
+🙏 
+
+[04/30/2025 13:47] riceee8969
+Also just pointing it out, for `F-278` although everyone (including me) points out the root cause that `receive` is triggered on transferring funds from core -> evm. Only `F-280`&  to an extent `S-545` clearly asses the impact of the 30k gas limit resulting in the call failing due to `stake` inside the `receive` and resulting in frozen/lost funds withing the system contract. There wont be any auto-staking.
+
+{Reactions}
+hi5 
+
+[04/30/2025 15:10] quanna2121
+About the issue S-358 (https://code4rena.com/audits/2025-04-kinetiq/submissions/S-358)
+The `L1Write::sendSpot` function is defined as follows:
+
+```solidity
+function sendSpot(address destination, uint64 token, uint64 _wei) external {
+  emit SpotSend(msg.sender, destination, token, _wei);
+}
+```
+
+According to the official documentation (https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm/hypercore-less-than-greater-than-hyperevm-transfers#transferring-between-core-and-evm):
+
+> *Transferring tokens from HyperCore to HyperEVM can be done using a `spotSend` action (or via the frontend) with the corresponding **system address** as the `destination`.*
+
+However, in the `StakingManager::withdrawTokenFromSpot()` function, the `destination` parameter passed to `L1Write::sendSpot()` is incorrectly set to the `treasury` address instead of the **corresponding system address** for the withdrawal token.
+
+Because of this, the issue is valid and should **not** be marked as a duplicate of issue `S-440`.
+
+
+[04/30/2025 15:17] riceee8969
+here the team is just sending the other L1 tokens that are sent to the spot balance of the contract to the treasure spot balance on the core side. Hence theres no issue here, they are not trying to withdraw it to EVM side. `spotSend` is basically used for transferring spot balances between addresses, and to send a `token` from core to evm we have to enter the system contract of that token as the destination in `spotSend`. I think this is where you are confused.
+
+
+[04/30/2025 15:17] mrseyed971_30047
+What does it mean ??
+
+{Attachments}
+Code4rena - ARCHIVE-PUBLIC - kinetiq-apr [1357825202360418534].txt_Files/Screenshot_20250429_174958_Chrome-2C443.jpg
+
+
+[04/30/2025 15:20] chibibridge
+Even if it sends spot balance to hypercore in `treasury` address, it can still manage the received asset e.g., can send to evm by sending sendSpot() request from `treasury`; sponsor said it's a multisig wallet, so as long as it has capability to send arbitrary transaction, it's not lost.
+
+
+[04/30/2025 15:21] riceee8969
+it could just be an EOA too doesnt matter here tbh
+
+
+[04/30/2025 16:50] loptuskr
+invalid
+
+
+[04/30/2025 18:07] mrseyed971_30047
+So why didn't they use invalid tag Like some issues?
+
+
+[05/01/2025 12:11] loptuskr
+I am not sure why but my reports were like this too🥲
+
+
+[05/01/2025 15:06] rouhsamad
+Is pjqa done? Or will it be open again after juding comments?
+
+
+[05/01/2025 16:52] thebrittfactor
+It'll be up to the judge on whether they want to re-open comments.
+
+
+[05/01/2025 22:03] chibibridge
+Regarding comment S-1065 https://code4rena.com/audits/2025-04-kinetiq/submissions/S-1065?commentParent=g4WvZMNCdYR :
+- Sending tokens to 0x222..22 is bidirectional. It's Core <-> EVM. Check https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm for Core->EVM part.
+
+
+[05/01/2025 22:14] valkvalue
+You seem to be right, its an oversight from my side, I would delete the comment if I could. ( but can't after pjqa is closed )
+
+{Reactions}
+🙇‍♀️ 
+
+[05/02/2025 08:18] yusufroqib
+
+
+{Stickers}
+Code4rena - ARCHIVE-PUBLIC - kinetiq-apr [1357825202360418534].txt_Files/749054660769218631-E8FD7.json
+
+
+[05/03/2025 14:30] deeney3866
+Has the judge started responding to all escalation. Because, i havent seen any on the escalation made on S-686
+
+
+[05/03/2025 21:36] francise._
+Not yet
+
+
+[05/04/2025 04:01] vangrim
+What happens after PJQA? Another round of judging based on the comments?
+
+
+[05/04/2025 07:44] francise._
+Yup
+
+
+[05/06/2025 15:22] georgefalcon_
+is the escalations still on or it has passed?
+
+
+[05/06/2025 15:24] itsmetechjay
+The judge is currently reviewing comments that came in during post-judging QA.
+
+
+[05/06/2025 15:25] georgefalcon_
+sorry i don't really understand
+
+
+[05/06/2025 15:25] georgefalcon_
+like has it passed?
+i would like to make a comment on issue S805
+
+
+[05/06/2025 15:27] georgefalcon_
+on code4 what's the duration for the escalation period?
+@Jay | C4
+
+
+[05/06/2025 15:29] itsmetechjay
+It'll be up to the judge on whether or not they want to re-open comments.  But if so, you'll need to be an [SR warden](https://docs.code4rena.com/roles/sr-wardens) in order to participate.
+
+
+[05/06/2025 15:31] georgefalcon_
+ohhh okay thanks
+
+
+[05/07/2025 17:48] deeney3866
+When??
+
+
+[05/09/2025 19:53] glitchunter010
+Hi @Jay | C4 
+I have a disputed report "Buffer Accounting Can Be Manipulated for Reward Arbitrage"
+what I can do to approve my point
+new commer🫡
+
+
+[05/09/2025 20:07] itsmetechjay
+Once you become an [SR warden](https://docs.code4rena.com/roles/sr-wardens), you'll have an opportunity to provide fact-based comments during post-judging QA.
+
+
+[05/09/2025 20:49] glitchunter010
+So Now can do nothing 😔
+
+
+[05/12/2025 21:16] mauro2857
+Does it need to verify identity or just tax reporting on the website page
+
+
+[05/12/2025 21:18] yusufroqib
+🚀
+
+{Reactions}
+🚀 (3) 🔥 (3) 
+
+[05/12/2025 21:25] anchabadze
+Public contests are awesome! Even after two private audits by security firms, a public audit managed to uncover 3 H and 5 M severity issues.
+
+{Reactions}
+🔥 (2) 💯 (2) 
+
+[05/12/2025 21:26] itsmetechjay
+If your tax information is submitted, you're all set.
+
+
+[05/12/2025 21:26] mauro2857
+Thank you sir. Awesome contest all thanks to Kinetiq and C4 teams.
+
+
+[05/12/2025 21:34] unclejeff4407
+Always, another contest/ more time/ more expertise can reveal even more in some cases
+
+
+[05/12/2025 22:21] dimorge
+first contest ever couldn't feel better :c4ship:
+
+{Reactions}
+👍 (2) hi5 
+
+[05/12/2025 22:30] willycode20
+Huge win bro
+
+{Reactions}
+hi5 
+
+[05/13/2025 01:23] chibibridge
+happy to see the results, glad to secure 7th 🙂 but please make sure to fix F-52 and S-28.. if not it'll be immediately be broken
+
+
+[05/13/2025 03:55] 0xdemonnn
+congrats all 🎉
+
+
+[05/13/2025 04:06] daniel526
+congrats @0xG0P1
+
+{Reactions}
+🫂 
+
+[05/13/2025 09:26] evokid
+Congrats @infect3d 🎉
+
+{Reactions}
+💜 
+
+[05/13/2025 10:39] mrfalsegenius
+@Riceee Hey, why did you remove your msg?
+
+
+[05/13/2025 10:42] riceee8969
+Hi, I was advised to not publicly discuss issues until the report is public, I thought results  == report 😅
+
+
+[05/13/2025 10:44] mrfalsegenius
+Ah, I see. Once the report is public, what happens? Can it be changed if some issues were misjudged?
+
+
+[05/13/2025 10:46] riceee8969
+I have no idea too tbh, fairly new to C4. But I would just like for clarifications for my understanding, not expecting anything more haha cos tbh thats a hassle too.
+
+
+[05/13/2025 10:46] cloudellie
+No, the judging results are finalized prior to awards being announced.
+
+
+[05/13/2025 10:47] mrfalsegenius
+Hmm, ok! Thank you....
+
+
+[05/13/2025 10:48] mrfalsegenius
+Damn...
+
+{Reactions}
+😦 
+
+[05/13/2025 10:49] cloudellie
+You can earn the privilege of participating in post-judging QA by meeting the criteria for the SR role: https://docs.code4rena.com/roles/sr-wardens
+
+{Embed}
+https://docs.code4rena.com/roles/sr-wardens
+SR Wardens | Code4rena
+
+
+[05/13/2025 10:50] mrfalsegenius
+Yup, that's on the agenda
+
+{Reactions}
+hi5 
+
+[05/13/2025 11:55] ayamdapo
+🙏
+
+
+[05/13/2025 15:15] itsmetechjay
+Wardens - please note that the judge has pointed out a change that needs to be made to two submissions and their duplicate groupings.  We are working to get this adjusted as soon as possible. 
+
+In the meantime, we have deleted the awarding post here and in #📢・c4-updates.  We’ll get a new/updated award announcement posted as soon as possible. Thank you for your patience and understanding.
+
+{Reactions}
+✅ (2) 
+
+[05/13/2025 19:51] itsmetechjay
+🤑 🎉  Awards for **Kinetiq**:
+
+$3,496.48 USDC » @0xG0P1
+$3,123.35 USDC » @infect3d
+$2,595.63 USDC » @KupiaSec
+$2,503.45 USDC » @VAD37
+$2,503.45 USDC » @DemoreX
+$929.68 USDC » @IzuMan
+$886.77 USDC » @chibi
+$804.57 USDC » @Falendar
+$705.57 USDC » @dobrevaleri
+$698.10 USDC » @0xDemon
+$634.15 USDC » @Rocco
+$634.15 USDC » @Riceee
+$568.42 USDC » @harshw
+$554.30 USDC » @FalseGenius
+$554.30 USDC » @LSH.F.GJ
+$541.38 USDC » @oxelmiguel12
+$537.00 USDC » @jkk812812
+$537.00 USDC » @won
+$485.73 USDC » @givn
+$377.05 USDC » @marchev
+$359.12 USDC » NexusAudits (@cheatc0d3 and @zxnnx)
+$349.77 USDC » @K42 Ψ
+$349.77 USDC » @0x15
+$349.77 USDC » @mauro
+$349.77 USDC » @Dimorge
+$349.77 USDC » @CoheeY
+$349.77 USDC » @Anime.Consumer
+$271.95 USDC » @knight1
+$267.57 USDC » @d4ps0x
+$267.57 USDC » @siddu
+$267.57 USDC » @Crypto Hybrid
+$267.57 USDC » @Silverwind
+$267.57 USDC » @0xV1BH4
+$267.57 USDC » @anchabadze
+$119.84 USDC » @franfran20
+$118.83 USDC » @0xSecurity
+$114.45 USDC » @Ragnarok
+$109.48 USDC » @rsam_eth
+$109.48 USDC » @0xpiken
+$97.15 USDC » @0xgremlincat
+$92.18 USDC » @gesha17
+$87.80 USDC » @zhanmingjing
+$87.80 USDC » @rama_tavanam
+$87.80 USDC » @ka14ar
+$87.80 USDC » @Bobo
+$87.80 USDC » @0xsagetony
+$87.80 USDC » @hals
+$31.03 USDC » @holydevoti0n
+$31.03 USDC » @zzebra83
+$22.49 USDC » @Yaioxy
+$21.68 USDC » @0xfalconHoof
+$21.68 USDC » @adam-idarrha
+$21.68 USDC » @VanGrim | Midgar
+$21.68 USDC » @Atharv
+$21.68 USDC » @kkk
+$13.73 USDC » @valkvalue
+$13.73 USDC » @trachev
+$13.73 USDC » @peanuts
+$12.15 USDC » @mahdifa
+$9.35 USDC » 056Security (@0xb0k0 and @stanchev)
+$9.35 USDC » @WillyCode20
+$9.35 USDC » @Harry-cryptodev
+$9.35 USDC » @Maze
+$9.35 USDC » @gmh
+$9.35 USDC » @cerweb10
+$9.35 USDC » @Lamsya
+$9.35 USDC » @Pocas
+$9.35 USDC » @Daniel526
+$9.35 USDC » @Olamilekan
+$9.35 USDC » @DanielTan
+$4.38 USDC » @ak1
+$4.38 USDC » @d3e4
+$4.38 USDC » @afriauditor
+$4.38 USDC » @ke1caM
+$4.38 USDC » @0xrochimaru
+$4.38 USDC » @harry
+$4.38 USDC » @octeezy
+$4.38 USDC » @audinarey
+$4.38 USDC » @btk
+$4.38 USDC » @0xMSF14
+$4.38 USDC » @ThanatO$
+$4.38 USDC » @mrudenko
+$4.38 USDC » @typicalHuman
+
+🏁 Findings summary
+--------------------------------------—
+3 High risk findings
+5 Med risk findings
+871 wardens participated
+
+Top Hunter: DemoreX, VAD37, KupiaSec, Infect3d
+Top Gatherer: 0xG0P1
+Top QA report: dystopia
+
+Awards will be distributed on Polygon within the next week. Congratulations all!  💸 💸 💸
+
+⚠️ Awardees, be sure to [complete your tax reporting info](https://docs.code4rena.com/awarding/incentive-model-and-awards/awarding-process#tax-information-for-code4rena-contributors-wardens-judges-etc) if you haven't already. This must be completed within 30 days (i.e. before Friday, 13 June 2025) to receive your award distribution for this audit.
+
+{Reactions}
+🚀 (5) 🎉 (9) ✅ (3) 🫡 (7) 
+
+[06/16/2025 08:45] francise._
+Any updates on the second batch of payments? @Jay | C4
+
+
+[06/16/2025 10:12] cloudellie
+I believe the final batch was sent on Friday.  If you don't see the awards in your wallet, please [check the steps outlined here](https://docs.code4rena.com/awarding/awarding-process#if-you-dont-see-your-award-in-your-wallet).
+
+{Embed}
+https://docs.code4rena.com/awarding/awarding-process
+Awarding process | Code4rena
+
+
+[06/16/2025 10:49] francise._
+Thank you, seen it!
+
+{Reactions}
+🎉 (2) 
+
+[07/09/2025 23:30] C4
+ℹ️ This channel is pending archive.   As a result, any private threads will be permanently deleted 07/18/2025 23:19. Please make sure to grab anything you might need before then.
+
+
+[07/17/2025 20:02] C4
+ℹ️ Reminder: this channel will be deleted after 24 hours.
+
+
+==============================================================
+Exported 382 message(s)
+==============================================================
